@@ -1,25 +1,58 @@
-import React from 'react'
+import { Link } from "react-router";
+import {
+  Facebook,
+  Instagram,
+  Linkedin,
+  Youtube,
+  Mail,
+  Phone,
+  MapPin,
+  X as XLogo,
+} from "lucide-react";
 
-function Footerbar() {
+const quickLinks = [
+  { name: "Home", href: "/" },
+  { name: "Find Tuitions", href: "/tuitions" },
+  { name: "Browse Tutors", href: "/tutors" },
+  { name: "About Us", href: "/about" },
+  { name: "Contact", href: "/contact" },
+];
+
+const supportLinks = [
+  { name: "How It Works", href: "/how-it-works" },
+  { name: "FAQs", href: "/faqs" },
+  { name: "Privacy Policy", href: "/privacy" },
+  { name: "Terms of Service", href: "/terms" },
+];
+
+const socialLinks = [
+  { name: "facebook", icon: Facebook, href: "https://facebook.com" },
+  { name: "instagram", icon: Instagram, href: "https://instagram.com" },
+  { name: "linkedIn", icon: Linkedin, href: "https://linkedin.com" },
+  { name: "youTube", icon: Youtube, href: "https://youtube.com" },
+];
+
+export default function Footerbar() {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <div>
-      <footer className="bg-foreground text-background">
+    <footer className="bg-[#1d2530] text-white mt-10">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-          {/* About Section */}
+           
           <div className="space-y-4">
             <Link to="/" className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-primary">
-                <span className="font-display text-lg font-bold text-primary-foreground">e</span>
-              </div>
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-primary"></div>
               <span className="font-display text-xl font-bold">
-                Tuition<span className="text-primary">Bd</span>
+                e-Tuition<span className="text-primary">Bd</span>
               </span>
             </Link>
             <p className="text-sm text-background/70 leading-relaxed">
-              eTuitionBd is Bangladesh's leading tuition management platform connecting students with qualified tutors. We make finding the perfect tutor simple, reliable, and efficient.
+              eTuitionBd is Bangladesh's leading tuition management platform
+              connecting students with qualified tutors. We make finding the
+              perfect tutor simple, reliable, and efficient.
             </p>
-            {/* Social Links */}
+  
             <div className="flex items-center gap-3 pt-2">
               {socialLinks.map((social) => (
                 <a
@@ -45,9 +78,11 @@ function Footerbar() {
             </div>
           </div>
 
-          {/* Quick Links */}
+        
           <div>
-            <h4 className="font-display text-lg font-semibold mb-4">Quick Links</h4>
+            <h4 className="font-display text-lg font-semibold mb-4">
+              Quick Links
+            </h4>
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.name}>
@@ -62,7 +97,7 @@ function Footerbar() {
             </ul>
           </div>
 
-          {/* Support */}
+       
           <div>
             <h4 className="font-display text-lg font-semibold mb-4">Support</h4>
             <ul className="space-y-3">
@@ -79,9 +114,11 @@ function Footerbar() {
             </ul>
           </div>
 
-          {/* Contact Info */}
+         
           <div>
-            <h4 className="font-display text-lg font-semibold mb-4">Contact Us</h4>
+            <h4 className="font-display text-lg font-semibold mb-4">
+              Contact Us
+            </h4>
             <ul className="space-y-3">
               <li>
                 <a
@@ -109,7 +146,7 @@ function Footerbar() {
           </div>
         </div>
 
-        {/* Copyright */}
+       
         <div className="mt-12 pt-8 border-t border-background/10">
           <p className="text-center text-sm text-background/60">
             © {currentYear} eTuitionBd. All rights reserved.
@@ -117,8 +154,5 @@ function Footerbar() {
         </div>
       </div>
     </footer>
-    </div>
-  )
+  );
 }
-
-export default Footerbar
