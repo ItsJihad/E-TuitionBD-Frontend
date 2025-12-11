@@ -2,7 +2,7 @@ import { Link } from "react-router";
 
 function Headerbar() {
   return (
-    <div className="navbar bg-base-100 shadow-sm">
+    <div className="navbar bg-base-100 px-20 shadow-sm">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -76,8 +76,7 @@ function Headerbar() {
         </ul>
       </div>
       <div className="navbar-end gap-3">
-        <Link to={"login"} className="btn">Login</Link>
-        <Link to={"signup"} className="btn">Register</Link>
+        <Link to={"login"} className="btn">Get Started</Link>
       </div>
     </div>
   );
