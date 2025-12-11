@@ -1,12 +1,6 @@
 import { motion } from "framer-motion";
 import { Users, BookOpen, Award, Heart } from "lucide-react";
 
-const stats = [
-  { icon: Users, value: "10,000+", label: "Students" },
-  { icon: BookOpen, value: "5,000+", label: "Tutors" },
-  { icon: Award, value: "50,000+", label: "Classes Completed" },
-  { icon: Heart, value: "98%", label: "Satisfaction Rate" },
-];
 
 export default function Aboutpage() {
   return (

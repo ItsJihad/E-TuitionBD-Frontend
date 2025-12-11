@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router";
 
 function Headerbar() {
@@ -14,13 +13,12 @@ function Headerbar() {
               viewBox="0 0 24 24"
               stroke="currentColor"
             >
-              {" "}
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth="2"
                 d="M4 6h16M4 12h8m-8 6h16"
-              />{" "}
+              />
             </svg>
           </div>
           <ul
@@ -34,20 +32,52 @@ function Headerbar() {
             <Link to={"/contact"}> Contact </Link>
           </ul>
         </div>
-        <a className="btn btn-ghost text-xl">e-TuitionBD</a>
+        <Link to={"/"} className=" font-bold text-2xl p-5">
+          e-TuitionBD
+        </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 gap-4 font-bold ">
-          <Link className="hover:bg-[#422ad5] rounded-xl p-2 hover:text-white"  to={"/"}> Home </Link>
-          <Link className="hover:bg-[#422ad5] rounded-xl p-2 hover:text-white"  to={"/tuitions"}> Tuitions </Link>
-          <Link className="hover:bg-[#422ad5] rounded-xl p-2 hover:text-white"  to={"/tutors"}> Tutors </Link>
-          <Link  className="hover:bg-[#422ad5] rounded-xl p-2 hover:text-white" to={"/about"}> About </Link>
-          <Link className="hover:bg-[#422ad5] rounded-xl p-2 hover:text-white"  to={"/contact"}> Contact </Link>
+          <Link
+            className="hover:bg-[#422ad5] rounded-xl p-2 hover:text-white"
+            to={"/"}
+          >
+            {" "}
+            Home{" "}
+          </Link>
+          <Link
+            className="hover:bg-[#422ad5] rounded-xl p-2 hover:text-white"
+            to={"/tuitions"}
+          >
+            {" "}
+            Tuitions{" "}
+          </Link>
+          <Link
+            className="hover:bg-[#422ad5] rounded-xl p-2 hover:text-white"
+            to={"/tutors"}
+          >
+            {" "}
+            Tutors{" "}
+          </Link>
+          <Link
+            className="hover:bg-[#422ad5] rounded-xl p-2 hover:text-white"
+            to={"/about"}
+          >
+            {" "}
+            About{" "}
+          </Link>
+          <Link
+            className="hover:bg-[#422ad5] rounded-xl p-2 hover:text-white"
+            to={"/contact"}
+          >
+            {" "}
+            Contact{" "}
+          </Link>
         </ul>
       </div>
       <div className="navbar-end gap-3">
-        <a className="btn">Login</a>
-        <a className="btn">Register</a>
+        <Link to={"login"} className="btn">Login</Link>
+        <Link to={"signup"} className="btn">Register</Link>
       </div>
     </div>
   );
