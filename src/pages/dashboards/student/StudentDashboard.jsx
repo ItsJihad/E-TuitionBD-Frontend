@@ -2,7 +2,7 @@ import React from 'react'
 
 function StudentDashboard() {
   return (
-    <div>
+    <div className='bg-base-100'>
       <div className="p-6 lg:p-8">
       <div className="space-y-8">
         <div>
@@ -13,7 +13,7 @@ function StudentDashboard() {
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div style={{ opacity: 1, transform: "none" }}>
+          <div>
             <div className="rounded-lg border bg-card text-card-foreground shadow-sm">
               <div className="space-y-1.5 p-6 flex flex-row items-center justify-between pb-2">
                 <h3 className="tracking-tight text-sm font-medium text-muted-foreground">

@@ -47,14 +47,16 @@ export const router = createBrowserRouter([
         Component: Tuitions,
       },
     ],
-  },{
-    path:"/dashboard",
-    Component:DashboardLayout,
-    errorElement:<ErrorPage></ErrorPage>,
-    children:[{
-        index:true,
-        path:"/dashboard/students",
-        Component:StudentDashboard
-    }]
+  },
+  {
+    path: "/dashboard",
+    Component: DashboardLayout,
+    errorElement: <ErrorPage></ErrorPage>,
+    children: [
+      {
+        path: "/dashboard/students",
+        Component: StudentDashboard,
+      },
+    ],
   }
 ]);
