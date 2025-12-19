@@ -1,13 +1,13 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 const firebaseConfig = {
-  apiKey: "AIzaSyCsrE8--PKmR3kPcdSUdXeNBbrnrgEqqbI",
-  authDomain: "e-tuitionbd-fa22c.firebaseapp.com",
-  projectId: "e-tuitionbd-fa22c",
-  storageBucket: "e-tuitionbd-fa22c.firebasestorage.app",
-  messagingSenderId: "573707508482",
-  appId: "1:573707508482:web:3af824ecc74827a3cbc01b"
+  apiKey: import.meta.env.VITE_apikey,
+  authDomain: import.meta.env.VITE_authDomain,
+  projectId: import.meta.env.VITE_projectId,
+  storageBucket: import.meta.env.VITE_storageBucket,
+  messagingSenderId: import.meta.env.VITE_messagingSenderId,
+  appId: import.meta.env.VITE_appId,
 };
 
 const app = initializeApp(firebaseConfig);
-export const Auth = getAuth(app)
+export const Auth = getAuth(app);
