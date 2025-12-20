@@ -76,7 +76,7 @@ function Headerbar() {
         </ul>
       </div>
       <div className="navbar-end gap-3">
-        <Link to={"login"} className="btn">Get Started</Link>
+        <Link to={"/signin"} className="btn">Get Started</Link>
       </div>
     </div>
   );

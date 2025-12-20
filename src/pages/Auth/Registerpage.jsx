@@ -1,25 +1,26 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
+import UseAuth from "../../hooks/UseAuth";
 
-export default function Registerpage({ onSubmit: onSubmitProp } = {}) {
+export default function Registerpage() {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-    watch,
-  } = useForm({
-    defaultValues: { role: "student" },
-  });
+  } = useForm();
 
   const [showPwd, setShowPwd] = useState(false);
-  const password = watch("password", "");
 
-  const onSubmit = async (data) => {
-    if (typeof onSubmitProp === "function") return onSubmitProp(data);
-    // Default placeholder behavior - replace with real API call
-    console.log("Register:", data);
-    return new Promise((res) => setTimeout(res, 800));
+  const { SignUp, GoogleSign } = UseAuth();
+
+  const onSubmit = (data) => {
+    console.log(data);
+    SignUp(data.email, data.password);
+  };
+
+  const googleSignIn = () => {
+    GoogleSign();
   };
 
   return (
@@ -28,31 +29,48 @@ export default function Registerpage({ onSubmit: onSubmitProp } = {}) {
         <div className="bg-white border border-slate-100 rounded-xl shadow-sm">
           <div className="p-6">
             <header className="mb-6 text-center">
-              <h1 className="text-2xl font-semibold text-slate-900">Create account</h1>
-              <p className="text-sm text-slate-500 mt-1">Join e-TuitionBd and start Learning / Earning today</p>
+              <h1 className="text-2xl font-semibold text-slate-900">
+                Create account
+              </h1>
+              <p className="text-sm text-slate-500 mt-1">
+                Join e-TuitionBd and get started
+              </p>
             </header>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
-              {/* Full name */}
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="space-y-4"
+              noValidate
+            >
               <div>
-                <label htmlFor="name" className="block text-xs font-medium text-slate-700 mb-1">
+                <label
+                  htmlFor="name"
+                  className="block text-xs font-medium text-slate-700 mb-1"
+                >
                   Full name
                 </label>
                 <input
                   id="name"
                   type="text"
-                  {...register("name", { required: "Full name is required" })}
+                  {...register("name", {
+                    required: "Name is required",
+                  })}
                   className={`w-full rounded-md border px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-200 ${
                     errors.name ? "border-rose-500" : "border-slate-200"
                   }`}
-                  aria-invalid={errors.name ? "true" : "false"}
                 />
-                {errors.name && <p className="mt-1 text-xs text-rose-600">{errors.name.message}</p>}
+                {errors.name && (
+                  <p className="mt-1 text-xs text-rose-600">
+                    {errors.name.message}
+                  </p>
+                )}
               </div>
 
-              {/* Email */}
               <div>
-                <label htmlFor="email" className="block text-xs font-medium text-slate-700 mb-1">
+                <label
+                  htmlFor="email"
+                  className="block text-xs font-medium text-slate-700 mb-1"
+                >
                   Email
                 </label>
                 <input
@@ -61,40 +79,56 @@ export default function Registerpage({ onSubmit: onSubmitProp } = {}) {
                   autoComplete="email"
                   {...register("email", {
                     required: "Email is required",
-                    pattern: { value: /^\S+@\S+$/i, message: "Enter a valid email" },
+                    pattern: {
+                      value: /^\S+@\S+$/i,
+                      message: "Enter a valid email",
+                    },
                   })}
                   className={`w-full rounded-md border px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-200 ${
                     errors.email ? "border-rose-500" : "border-slate-200"
                   }`}
-                  aria-invalid={errors.email ? "true" : "false"}
                 />
-                {errors.email && <p className="mt-1 text-xs text-rose-600">{errors.email.message}</p>}
+                {errors.email && (
+                  <p className="mt-1 text-xs text-rose-600">
+                    {errors.email.message}
+                  </p>
+                )}
               </div>
 
-              {/* Phone */}
               <div>
-                <label htmlFor="phone" className="block text-xs font-medium text-slate-700 mb-1">
+                <label
+                  htmlFor="phone"
+                  className="block text-xs font-medium text-slate-700 mb-1"
+                >
                   Phone number
                 </label>
                 <input
                   id="phone"
                   type="tel"
-                  autoComplete="tel"
+                  placeholder="01XXXXXXXXX"
                   {...register("phone", {
-                    required: "Phone is required",
-                    pattern: { value: /^[0-9+\-\s]{7,20}$/, message: "Enter a valid phone" },
+                    required: "Phone number is required",
+                    pattern: {
+                      value: /^01\d{9}$/,
+                      message: "Enter a valid BD phone number",
+                    },
                   })}
                   className={`w-full rounded-md border px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-200 ${
                     errors.phone ? "border-rose-500" : "border-slate-200"
                   }`}
-                  aria-invalid={errors.phone ? "true" : "false"}
                 />
-                {errors.phone && <p className="mt-1 text-xs text-rose-600">{errors.phone.message}</p>}
+                {errors.phone && (
+                  <p className="mt-1 text-xs text-rose-600">
+                    {errors.phone.message}
+                  </p>
+                )}
               </div>
 
-              {/* Password */}
               <div>
-                <label htmlFor="password" className="block text-xs font-medium text-slate-700 mb-1">
+                <label
+                  htmlFor="password"
+                  className="block text-xs font-medium text-slate-700 mb-1"
+                >
                   Password
                 </label>
                 <div className="relative">
@@ -104,66 +138,103 @@ export default function Registerpage({ onSubmit: onSubmitProp } = {}) {
                     autoComplete="new-password"
                     {...register("password", {
                       required: "Password is required",
-                      minLength: { value: 6, message: "Minimum 6 characters" },
+                      minLength: {
+                        value: 6,
+                        message: "Minimum 6 characters",
+                      },
                     })}
-                    className={`w-full rounded-md border px-3 py-2 pr-16 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-200 ${
+                    className={`w-full rounded-md border px-3 py-2 pr-10 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-slate-200 ${
                       errors.password ? "border-rose-500" : "border-slate-200"
                     }`}
-                    aria-invalid={errors.password ? "true" : "false"}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPwd((s) => !s)}
-                    className="absolute hover:cursor-pointer right-2 top-1/2 -translate-y-1/2 text-slate-500 text-sm focus:outline-none"
-                    aria-label={showPwd ? "Hide password" : "Show password"}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-500 text-sm hover:cursor-pointer"
                   >
                     {showPwd ? "Hide" : "Show"}
                   </button>
                 </div>
-                {errors.password && <p className="mt-1 text-xs text-rose-600">{errors.password.message}</p>}
+                {errors.password && (
+                  <p className="mt-1 text-xs text-rose-600">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
 
-              {/* Role (student / tutor) */}
-              <fieldset>
-                <legend className="text-xs font-medium text-slate-700 mb-2">Register as</legend>
-                <div className="flex gap-4">
-                  <label className="inline-flex items-center gap-2">
-                    <input
-                      type="radio"
-                      value="student"
-                      {...register("role")}
-                      defaultChecked
-                      className="h-4 w-4 rounded border-slate-300 text-slate-900"
-                    />
-                    <span className="text-sm text-slate-700">Student</span>
-                  </label>
+              <div className="flex gap-6">
+                <label className="inline-flex items-center gap-2 text-sm text-slate-700">
+                  <input
+                    type="radio"
+                    value="student"
+                    defaultChecked
+                    {...register("role", { required: true })}
+                    className="h-4 w-4 border-slate-300"
+                  />
+                  Student
+                </label>
 
-                  <label className="inline-flex items-center gap-2">
-                    <input
-                      type="radio"
-                      value="tutor"
-                      {...register("role")}
-                      className="h-4 w-4 rounded border-slate-300 text-slate-900"
-                    />
-                    <span className="text-sm text-slate-700">Tutor</span>
-                  </label>
-                </div>
-              </fieldset>
+                <label className="inline-flex items-center gap-2 text-sm text-slate-700">
+                  <input
+                    type="radio"
+                    value="tutor"
+                    {...register("role", { required: true })}
+                    className="h-4 w-4 border-slate-300"
+                  />
+                  Tutor
+                </label>
+              </div>
 
-              {/* Submit */}
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full rounded-md bg-slate-900 text-white py-2 text-sm font-medium hover:brightness-95 disabled:opacity-60 transition"
+                className="flex mx-auto p-5 my-2 rounded-md bg-slate-900 text-white py-2 text-sm font-medium hover:brightness-95 disabled:opacity-60 transition"
               >
-                {isSubmitting ? "Creating..." : "Create account"}
+                {isSubmitting ? "Creating account..." : "Create account"}
               </button>
             </form>
 
-            {/* footer */}
+            <button
+              onClick={googleSignIn}
+              className="btn flex mx-auto bg-white text-black border-[#e5e5e5]"
+            >
+              <svg
+                aria-label="Google logo"
+                width="16"
+                height="16"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 512 512"
+              >
+                <g>
+                  <path d="m0 0H512V512H0" fill="#fff"></path>
+                  <path
+                    fill="#34a853"
+                    d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"
+                  ></path>
+                  <path
+                    fill="#4285f4"
+                    d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"
+                  ></path>
+                  <path
+                    fill="#fbbc02"
+                    d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"
+                  ></path>
+                  <path
+                    fill="#ea4335"
+                    d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
+                  ></path>
+                </g>
+              </svg>
+              Login with Google
+            </button>
+
             <div className="mt-4 text-center text-sm text-slate-600">
-              <Link to="/login" className="text-slate-700 hover:underline">
-                Already have an account? Sign in
+              Already have an account?
+              <Link
+                to="/signin"
+                className="ml-1 text-slate-700 hover:underline"
+              >
+                Sign in
               </Link>
             </div>
           </div>

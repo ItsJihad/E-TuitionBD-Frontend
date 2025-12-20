@@ -31,11 +31,11 @@ export const router = createBrowserRouter([
         Component: Contactpage,
       },
       {
-        path: "/login",
+        path: "/signin",
         Component: LoginPage,
       },
       {
-        path: "/signup",
+        path: "/register",
         Component: Registerpage,
       },
       {
@@ -58,5 +58,5 @@ export const router = createBrowserRouter([
         Component: StudentDashboard,
       },
     ],
-  }
+  },
 ]);
