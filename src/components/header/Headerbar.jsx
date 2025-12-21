@@ -1,6 +1,13 @@
+import { use, useState } from "react";
 import { Link } from "react-router";
+import UseAuth from "../../hooks/UseAuth";
 
 function Headerbar() {
+ const {currentUser,LoggOut} = UseAuth()
+ const [user,SetUser]=useState(null)
+ const signut=()=>{
+   LoggOut()
+  }
   return (
     <div className="navbar bg-base-100 px-20 shadow-sm">
       <div className="navbar-start">
@@ -42,41 +49,67 @@ function Headerbar() {
             className="hover:bg-[#422ad5] rounded-xl p-2 hover:text-white"
             to={"/"}
           >
-            {" "}
-            Home{" "}
+          
+            Home 
           </Link>
           <Link
             className="hover:bg-[#422ad5] rounded-xl p-2 hover:text-white"
             to={"/tuitions"}
           >
-            {" "}
-            Tuitions{" "}
+           
+            Tuitions 
           </Link>
           <Link
             className="hover:bg-[#422ad5] rounded-xl p-2 hover:text-white"
             to={"/tutors"}
           >
-            {" "}
-            Tutors{" "}
+           
+            Tutors 
           </Link>
           <Link
             className="hover:bg-[#422ad5] rounded-xl p-2 hover:text-white"
             to={"/about"}
           >
-            {" "}
-            About{" "}
+             
+            About 
           </Link>
           <Link
             className="hover:bg-[#422ad5] rounded-xl p-2 hover:text-white"
             to={"/contact"}
           >
-            {" "}
-            Contact{" "}
+            Contact 
           </Link>
         </ul>
       </div>
       <div className="navbar-end gap-3">
-        <Link to={"/signin"} className="btn">Get Started</Link>
+
+        {
+
+          currentUser?(<div className="dropdown dropdown-end">
+      <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+        <div className="w-10 rounded-full">
+          <img
+            alt="Tailwind CSS Navbar component"
+            src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+        </div>
+      </div>
+      <ul
+        tabIndex="-1"
+        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+        <li>
+          <a className="justify-between">
+            Profile
+            <span className="badge">{currentUser.displayName?currentUser.displayName:"Google User"}</span>
+          </a>
+        </li>
+        <li><a>Settings</a></li>
+        <li onClick={signut} ><a>Logout</a></li>
+      </ul>
+    </div>
+  ):(<Link to={"/signin"} className="btn">Get Started</Link>)
+
+        }
+        {/* <Link to={"/signin"} className="btn">Get Started</Link> */}
       </div>
     </div>
   );

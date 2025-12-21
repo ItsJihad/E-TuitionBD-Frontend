@@ -17,9 +17,7 @@ export default function Loginpage() {
     GoogleSign();
   };
 
-  const signut=()=>{
-   LoggOut()
-  }
+  
   const onSubmit = (data) => {
     signIn(data.email,data.password)
   };
@@ -142,7 +140,7 @@ export default function Loginpage() {
                 Create account
               </Link>
             </div>
-            <button onClick={signut}>sign out</button>
+           
           </div>
         </div>
       </main>

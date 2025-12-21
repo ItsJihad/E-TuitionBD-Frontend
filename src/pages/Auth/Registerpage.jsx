@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import UseAuth from "../../hooks/UseAuth";
@@ -12,11 +12,14 @@ export default function Registerpage() {
 
   const [showPwd, setShowPwd] = useState(false);
 
-  const { SignUp, GoogleSign } = UseAuth();
+  const { SignUp, GoogleSign, ProfileUpdate } = UseAuth();
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data);
-    SignUp(data.email, data.password);
+    await SignUp(data.email, data.password);
+    await ProfileUpdate({
+      displayName: data.name,
+    });
   };
 
   const googleSignIn = () => {
