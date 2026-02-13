@@ -8,8 +8,7 @@ import LoginPage from "../pages/Auth/LoginPage";
 import Registerpage from "../pages/Auth/Registerpage";
 import Tutors from "../pages/tutors/Tutors";
 import Tuitions from "../pages/tuitions/Tuitions";
-import DashboardLayout from "../layouts/DashboardLayout";
-import StudentDashboard from "../pages/dashboards/student/StudentDashboard";
+
 
 export const router = createBrowserRouter([
   {
@@ -48,15 +47,15 @@ export const router = createBrowserRouter([
       },
     ],
   },
-  {
-    path: "/dashboard",
-    Component: DashboardLayout,
-    errorElement: <ErrorPage></ErrorPage>,
-    children: [
-      {
-        path: "/dashboard/students",
-        Component: StudentDashboard,
-      },
-    ],
-  },
+  // {
+  //   path: "/dashboard",
+  //   Component: DashboardLayout,
+  //   errorElement: <ErrorPage></ErrorPage>,
+  //   children: [
+  //     {
+  //       path: "/dashboard/students",
+  //       Component: StudentDashboard,
+  //     },
+  //   ],
+  // },
 ]);

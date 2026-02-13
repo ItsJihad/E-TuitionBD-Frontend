@@ -1,18 +1,6 @@
-import {
-  Bolt,
-  BookOpen,
-  CreditCard,
-  House,
-  LayoutDashboard,
-  LogOut,
-  NotebookPen,
-  School,
-} from "lucide-react";
+import React from 'react'
 
-import { Link } from "react-router";
-import MobileNav from "../mobileNav/MobileNav";
-
-function Sidebar({ outlet }) {
+function StudentSideBar() {
   return (
     <div className="drawer md:drawer-open">
       <input id="my-drawer-4" type="checkbox" className="drawer-toggle " />
@@ -89,7 +77,7 @@ function Sidebar({ outlet }) {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default Sidebar;
+export default StudentSideBar

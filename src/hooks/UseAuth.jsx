@@ -1,9 +1,8 @@
-import React, { use } from 'react'
-import { Authcontext } from '../firebase/contexts/Authcontext'
+import { use } from "react";
+import { Authcontext } from "../firebase/contexts/Authcontext";
 
 function UseAuth() {
-     
-  return use(Authcontext)
+  return use(Authcontext);
 }
 
-export default UseAuth
+export default UseAuth;

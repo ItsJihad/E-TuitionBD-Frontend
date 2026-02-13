@@ -2,6 +2,9 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import UseAuth from "../../hooks/UseAuth";
+import axios from "axios";
+import { useAxiosSecure } from "../../hooks/UseAxios";
+import { useAxiosOpen } from "../../hooks/useAxiosOpen";
 
 export default function Registerpage() {
   const {
@@ -9,21 +12,68 @@ export default function Registerpage() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
-
   const [showPwd, setShowPwd] = useState(false);
-
-  const { SignUp, GoogleSign, ProfileUpdate } = UseAuth();
+  const { SignUp, GoogleSign, ProfileUpdate, currentUser } = UseAuth();
+  const AxiosSecure = useAxiosSecure();
+  const AxiosOpen = useAxiosOpen();
 
   const onSubmit = async (data) => {
-    console.log(data);
-    await SignUp(data.email, data.password);
+    const userCredential = await SignUp(data.email, data.password);
+    console.log(userCredential);
+
+    const firebaseUser = userCredential.user;
+
     await ProfileUpdate({
       displayName: data.name,
     });
+
+    const freshToken = await firebaseUser.getIdToken(true);
+
+    const UserInfo = {
+      role: data.role,
+      phone: data.phone,
+    };
+
+    try {
+      await AxiosOpen.post("/user/auth", UserInfo, {
+        headers: {
+          authorization: `Bearer ${freshToken}`,
+        },
+      }).then((data) => {
+        console.log(data.data);
+      });
+    } catch (error) {
+      console.log(`failed to connect ${error}`);
+    }
   };
 
-  const googleSignIn = () => {
-    GoogleSign();
+  const googleSignIn =async () => {
+   const result = await GoogleSign(); 
+    const user = result.user;
+    const token = await user.getIdToken();
+    
+
+    const UserInfo = {
+      role: "student",
+      phone: "0100000000",
+    };
+
+    try {
+      await AxiosOpen.post("/user/googleauth", UserInfo, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      }).then((data) => {
+        console.log(data.data);
+      });
+    } catch (error) {
+      console.log(`failed to connect ${error}`);
+    }
+
+
+
+
+
   };
 
   return (
