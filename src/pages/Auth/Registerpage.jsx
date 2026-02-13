@@ -230,7 +230,7 @@ export default function Registerpage() {
                 <label className="inline-flex items-center gap-2 text-sm text-slate-700">
                   <input
                     type="radio"
-                    value="tutor"
+                    value="teacher"
                     {...register("role", { required: true })}
                     className="h-4 w-4 border-slate-300"
                   />

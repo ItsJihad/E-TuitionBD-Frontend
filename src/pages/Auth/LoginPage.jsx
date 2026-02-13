@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
 import UseAuth from "../../hooks/UseAuth";
+import { useAxiosSecure } from "../../hooks/UseAxios";
 
 export default function Loginpage() {
   const {
@@ -9,12 +10,31 @@ export default function Loginpage() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm();
+  const AxiosSecure =useAxiosSecure()
   const [showPwd, setShowPwd] = useState(false);
 
   const {signIn,GoogleSign,LoggOut}=UseAuth()
 
-  const googleSignIn = () => {
-    GoogleSign();
+  const googleSignIn = async() => {
+    const result = await GoogleSign(); 
+    const user = result.user;
+   
+    
+    const token = await user.getIdToken();
+     console.log(token);
+
+    const UserInfo = {
+      role: "student",
+      phone: "0100000000",
+    };
+
+    try {
+      await AxiosSecure.post("/user/googleauth",UserInfo).then((data) => {
+        console.log(data.data);
+      });
+    } catch (error) {
+      console.log(`failed to connect ${error}`);
+    }
   };
 
   
