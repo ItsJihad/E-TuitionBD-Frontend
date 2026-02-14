@@ -1,147 +1,103 @@
-import {
-  Mail,
-  User,
-  BadgeCheck,
-  Sparkles,
-  X
-} from "lucide-react";
-import { useLoaderData } from "react-router";
-import { useState } from "react";
+import { Mail, User, BadgeCheck, X, Send } from "lucide-react";
+import { Link, useParams } from "react-router";
+import { useEffect, useState } from "react";
+import { useAxiosSecure } from "../../hooks/UseAxios";
+import LoadingPage from "../../components/Loader/LoadingPage";
+import UseAuth from "../../hooks/UseAuth";
 
 export default function TutorProfile() {
-  const tutors = useLoaderData();
-  const tutor=tutors.data
-  console.log(tutor.length);
-  
+  const { id } = useParams();
+  const axios = useAxiosSecure();
+  const { currentUser } = UseAuth();
 
-  const [isOpen, setIsOpen] = useState(false);
-  const [name, setName] = useState(tutor.name);
-  const [email, setEmail] = useState(tutor.email);
+  const [loader, setLoader] = useState(true);
+  const [tutor, setTutor] = useState(null);
+ 
+
+
+  useEffect(() => {
+    const FetchData = async () => {
+      try {
+        setLoader(true);
+        const res = await axios.get(`/teacher/teacherdetails/${id}`);
+        setTutor(res.data);
+      } catch (error) {
+        console.error("Error fetching tutor:", error);
+      } finally {
+        setLoader(false);
+      }
+    };
+
+    if (currentUser && id) {
+      FetchData();
+    }
+  }, [id, currentUser, axios]);
+
+
+
+  if (loader) return <LoadingPage />;
+
 
   const dummyImage =
     "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop";
 
-  const handleSave = async () => {
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_ServerLink}/teachers/${teacher._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ name, email }),
-        }
-      );
-
-      if (!res.ok) throw new Error("Failed to update");
-
-      alert("Profile updated successfully");
-      setIsOpen(false);
-    } catch (error) {
-      console.error(error);
-      alert("Update failed");
-    }
-  };
-
   return (
     <>
-      <section className="min-h-screen bg-gradient-to-br from-slate-100 to-slate-200 py-16 px-4">
-        <div className="max-w-3xl mx-auto">
+      <section className=" bg-[#fafafa] py-25 px-4 relative overflow-hidden font-sans">
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-indigo-100/50 rounded-full blur-[120px] -z-10"></div>
+        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-blue-100/50 rounded-full blur-[100px] -z-10"></div>
 
-          {
-            tutor.map((tutor,id)=> (<div key={id} className="relative bg-white/80 backdrop-blur-lg rounded-3xl border border-white/40 shadow-xl p-10 text-center overflow-hidden">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100 overflow-hidden flex flex-col md:flex-row">
+            <div className="md:w-2/5 bg-slate-900 p-12 flex flex-col items-center justify-center relative">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/20 rounded-full blur-3xl"></div>
 
-            <img
-              src={dummyImage}
-              alt="Tutor profile"
-              className="w-36 h-36 mx-auto rounded-full object-cover border-4 border-white shadow-xl"
-            />
+              <div className="relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-700"></div>
+                <img
+                  src={tutor?.image || dummyImage}
+                  alt="Tutor profile"
+                  className="relative w-40 h-40 rounded-full object-cover border-4 border-slate-800 shadow-2xl"
+                />
+              </div>
 
-            <div className="mt-4 inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 px-4 py-1 rounded-full text-xs font-semibold border border-emerald-100">
-              <BadgeCheck className="w-4 h-4" />
-              Verified Tutor
+              <div className="mt-6">
+                <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] uppercase tracking-wider font-bold border border-emerald-500/20">
+                  <BadgeCheck className="w-3.5 h-3.5" />
+                  Verified Tutor
+                </span>
+              </div>
             </div>
 
-            <div className="mt-6">
-              <div className="flex items-center justify-center gap-2">
-                <User className="w-5 h-5 text-indigo-600" />
-                <h1 className="text-3xl font-bold text-slate-900">
+            <div className="md:w-3/5 p-12 flex flex-col justify-center bg-white">
+              <div className="space-y-2">
+                <p className="text-indigo-600 font-semibold text-sm tracking-wide uppercase">
+                  Teacher Profile
+                </p>
+                <h1 className="text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
                   {tutor.name}
                 </h1>
+                <div className="flex items-center gap-2 text-slate-500 pt-2">
+                  <div className="p-2 bg-slate-50 rounded-lg">
+                    <Mail className="w-4 h-4 text-slate-400" />
+                  </div>
+                  <span className="text-lg">{tutor.email}</span>
+                </div>
               </div>
 
-              <div className="flex items-center justify-center gap-2 mt-3 text-slate-600 text-sm">
-                <Mail className="w-4 h-4 text-slate-400" />
-                {tutor.email}
+              <div className="mt-12 pt-8 border-t border-slate-50 flex flex-wrap gap-4">
+                <Link
+                  to={`mailto:${tutor.email}?subject=Inquiry for Tutoring`}
+                  className="flex items-center gap-3 px-8 py-4 bg-indigo-600 text-white rounded-2xl font-bold transition-all hover:bg-indigo-700 hover:-translate-y-1 active:scale-95 shadow-xl shadow-indigo-100"
+                >
+                  <Send className="w-5 h-5" />
+                  <span>Contact with Email</span>
+                </Link>
               </div>
             </div>
-
-            <button
-              onClick={() => setIsOpen(true)}
-              className="mt-10 px-8 py-3 rounded-xl bg-slate-900 text-white font-medium hover:bg-indigo-600 transition-all duration-300 shadow-md hover:shadow-lg"
-            >
-              Edit Profile
-            </button>
-          </div>) )
-          }
-        </div>
-      </section>
-
-      {/* MODAL */}
-      {isOpen && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl w-full max-w-md p-8 relative shadow-xl">
-
-            {/* Close Button */}
-            <button
-              onClick={() => setIsOpen(false)}
-              className="absolute top-4 right-4 text-slate-500 hover:text-slate-800"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <h2 className="text-xl font-bold mb-6 text-slate-900">
-              Edit Profile
-            </h2>
-
-            {/* Name */}
-            <div className="mb-4">
-              <label className="block text-sm mb-1 text-slate-600">
-                Name
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full border border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
-
-            {/* Email */}
-            <div className="mb-6">
-              <label className="block text-sm mb-1 text-slate-600">
-                Email
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full border border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
-            </div>
-
-            {/* Save Button */}
-            <button
-              onClick={handleSave}
-              className="w-full bg-slate-900 text-white py-2.5 rounded-lg hover:bg-indigo-600 transition"
-            >
-              Save Changes
-            </button>
-
           </div>
         </div>
-      )}
+      </section>
     </>
   );
 }

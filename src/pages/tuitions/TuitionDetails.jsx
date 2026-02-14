@@ -7,14 +7,45 @@ import {
   Clock,
   ArrowLeft,
 } from "lucide-react";
-import { useLoaderData, Link } from "react-router";
+import { Link, useParams } from "react-router";
+import { useEffect, useState } from "react";
+import { useAxiosSecure } from "../../hooks/UseAxios";
+import LoadingPage from "../../components/Loader/LoadingPage";
+import UseAuth from "../../hooks/UseAuth";
 
 export default function TuitionDetails() {
-  const tuition = useLoaderData();
-  console.log(tuition.data);
+
+  const { id } = useParams();
+  const axios = useAxiosSecure();
+  const { currentUser } = UseAuth();
+
+  const [loader, setLoader] = useState(true);
+  const [tuition, setTuition] = useState(null);
+
+  useEffect(() => {
+    const FetchData = async () => {
+      try {
+        setLoader(true);
+        const res = await axios.get(`/tuition/posts/${id}`);
+        setTuition(res.data);
+
+      } catch (error) {
+        console.error("Error fetching tutor:", error);
+      } finally {
+        setLoader(false);
+      }
+    };
+
+    if (currentUser && id) {
+      FetchData();
+    }
+  }, [id, currentUser, axios]);
+
+  if (loader) return <LoadingPage />;
+
 
   return (
-    <section className="min-h-screen bg-slate-50 py-10 px-4">
+    <section className="py-25 bg-slate-50 py-10 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Back Button */}
         <Link
@@ -74,17 +105,7 @@ export default function TuitionDetails() {
               </div>
             </div>
 
-            {tuition.data.schedule && (
-              <div className="flex items-center gap-3 p-4 rounded-xl bg-slate-50 border border-slate-100">
-                <Clock className="w-5 h-5 text-slate-400" />
-                <div>
-                  <p className="text-xs text-slate-500">Schedule</p>
-                  <p className="font-medium text-slate-900">
-                    {tuition.data.schedule}
-                  </p>
-                </div>
-              </div>
-            )}
+            
           </div>
 
           {/* Description */}
