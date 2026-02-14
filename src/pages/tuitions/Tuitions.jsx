@@ -15,9 +15,9 @@ export default function Tuitions() {
   
 
   return (
-    <div className="p-5 bg-white px-4 py-12">
+    <div className="p-5 bg-white px-4 py-15 ">
       <main className="max-w-6xl mx-auto">
-        <header className="text-center max-w-2xl mx-auto mb-10">
+        <header className="text-center max-w-2xl mx-auto pt-12 mb-10">
           <h1 className="text-3xl font-semibold text-slate-900">
             Available Tuitions
           </h1>
