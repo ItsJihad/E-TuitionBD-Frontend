@@ -6,11 +6,11 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
 
   return {
-    // server:{
-    //   proxy:{
-    //     '/api':`${env.VITE_ServerLink}`
-    //   }
-    // },
+    server:{
+      proxy:{
+        '/api':`${env.VITE_ServerLink}`
+      }
+    },
     plugins: [tailwindcss(), react()],
   };
 });

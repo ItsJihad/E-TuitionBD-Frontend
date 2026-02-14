@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import UseAuth from "../../hooks/UseAuth";
 import axios from "axios";
 import { useAxiosSecure } from "../../hooks/UseAxios";
@@ -13,9 +13,10 @@ export default function Registerpage() {
     formState: { errors, isSubmitting },
   } = useForm();
   const [showPwd, setShowPwd] = useState(false);
-  const { SignUp, GoogleSign, ProfileUpdate, currentUser } = UseAuth();
-  const AxiosSecure = useAxiosSecure();
+  const { SignUp, GoogleSign, ProfileUpdate} = UseAuth();
   const AxiosOpen = useAxiosOpen();
+  const location =useLocation()
+  const Navigate=useNavigate()
 
   const onSubmit = async (data) => {
     const userCredential = await SignUp(data.email, data.password);
@@ -65,6 +66,8 @@ export default function Registerpage() {
         },
       }).then((data) => {
         console.log(data.data);
+        // return <Navigate state={location?.pathname} to="/home"></Navigate>
+       
       });
     } catch (error) {
       console.log(`failed to connect ${error}`);

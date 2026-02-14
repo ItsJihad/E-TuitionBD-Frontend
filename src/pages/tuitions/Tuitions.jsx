@@ -1,33 +1,19 @@
-import React from "react";
-
-const tuitions = [
-  {
-    subject: "Mathematics",
-    level: "Class 10",
-    status: "Open",
-    location: "Dhaka, Gulshan",
-    salary: "8,000 BDT/month",
-    schedule: "3 days/week",
-  },
-  {
-    subject: "Physics",
-    level: "HSC",
-    status: "Open",
-    location: "Dhaka, Dhanmondi",
-    salary: "10,000 BDT/month",
-    schedule: "4 days/week",
-  },
-  {
-    subject: "English",
-    level: "Class 8",
-    status: "Open",
-    location: "Dhaka, Uttara",
-    salary: "6,000 BDT/month",
-    schedule: "2 days/week",
-  },
-];
+import { Link, useLoaderData } from "react-router";
+import {
+  MapPin,
+  Wallet,
+  BookOpen,
+  ArrowRight,
+  GraduationCap,
+  FileText
+} from "lucide-react";
 
 export default function Tuitions() {
+
+  const tuitions = useLoaderData();
+
+  
+
   return (
     <div className="p-5 bg-white px-4 py-12">
       <main className="max-w-6xl mx-auto">
@@ -75,75 +61,64 @@ export default function Tuitions() {
           </button>
         </section>
 
-        <section>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {tuitions.map((tuition, index) => (
+        <section className="py-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {(tuitions.data).map((tuition, index) => (
               <article
                 key={index}
-                className="bg-white border border-slate-100 rounded-xl p-5 shadow-sm hover:shadow-md transition"
+                className="group bg-white rounded-2xl border border-slate-100 p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
               >
-                <div className="flex justify-between items-start mb-4">
+                {/* Header */}
+                <div className="flex justify-between items-start mb-5">
                   <div>
-                    <h3 className="text-lg font-medium text-slate-900">
-                      {tuition.subject}
-                    </h3>
-                    <p className="text-xs text-slate-600 mt-1">
-                      {tuition.level}
-                    </p>
+                    <div className="flex items-center gap-2 mb-2">
+                      <BookOpen className="w-5 h-5 text-indigo-600" />
+                      <h3 className="text-lg font-semibold text-slate-900 tracking-tight">
+                        {tuition.subject.toUpperCase()}
+                      </h3>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-slate-500">
+                      <GraduationCap className="w-4 h-4 text-slate-400" />
+                      <span className="font-medium">{tuition.classLevel}</span>
+                    </div>
                   </div>
 
-                  <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-slate-50 border border-slate-100 text-slate-700">
-                    {tuition.status}
+                  <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-100">
+                    {tuition.status.toUpperCase()}
                   </span>
                 </div>
 
-                <dl className="grid grid-cols-1 gap-y-3 text-sm text-slate-600 mb-5">
-                  <div className="flex items-center gap-2">
-                    <svg
-                      className="w-4 h-4 text-slate-400"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                    >
-                      <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0" />
-                      <circle cx="12" cy="10" r="3" />
-                    </svg>
-                    <span>{tuition.location}</span>
+                {/* Info Section */}
+                <div className="space-y-4 text-sm text-slate-600 mb-6">
+                  <div className="flex items-center gap-3">
+                    <MapPin className="w-4 h-4 text-slate-400" />
+                    <span className="font-medium">
+                      {tuition.location.toUpperCase()}
+                    </span>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <svg
-                      className="w-4 h-4 text-slate-400"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                    >
-                      <line x1="12" y1="2" x2="12" y2="22" />
-                      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                    </svg>
-                    <span>{tuition.salary}</span>
+                  <div className="flex items-center gap-3">
+                    <Wallet className="w-4 h-4 text-slate-400" />
+                    <span className="font-medium">{tuition.budget}</span>
                   </div>
+                  <div className="mt-4 p-3 rounded-lg bg-slate-50 border border-slate-100">
+  <div className="flex items-start gap-2">
+    <FileText className="w-4 h-4 text-slate-400 mt-0.5" />
+    <p className="text-sm text-slate-600 leading-relaxed line-clamp-3">
+      {tuition.description}
+    </p>
+  </div>
+</div>
+                </div>
 
-                  <div className="flex items-center gap-2">
-                    <svg
-                      className="w-4 h-4 text-slate-400"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                    >
-                      <path d="M12 7v14" />
-                      <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4" />
-                    </svg>
-                    <span>{tuition.schedule}</span>
-                  </div>
-                </dl>
-
-                <button
-                  type="button"
-                  className="w-full inline-flex items-center justify-center rounded-md bg-slate-900 text-white py-2 text-sm font-medium hover:brightness-95 transition"
+                {/* Button */}
+                <Link
+                  to={`/tuitions/${tuition._id}`}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 text-white py-2.5 text-sm font-medium hover:bg-indigo-600 transition-colors duration-300"
                 >
                   View Details
-                </button>
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </Link>
               </article>
             ))}
           </div>
