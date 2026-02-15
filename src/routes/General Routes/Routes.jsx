@@ -8,6 +8,25 @@ import LoginPage from "../../pages/Auth/LoginPage";
 import Registerpage from "../../pages/Auth/Registerpage";
 import LoadingPage from "../../components/Loader/LoadingPage";
 import { PrivateApiCalls } from "./PrivateApiCalls.routes";
+import {DashboardLayout} from "../../layouts/DashboardLayout";
+import PrivateRoute from "./PrivateRoutes";
+import StudentDashboard from "../../pages/dashboards/student/StudentDashboard";
+import MyTuitions from "../../pages/dashboards/student/components/MyTuitions";
+import PostTuition from "../../pages/dashboards/student/components/PostTuition";
+import TeachingApplications from "../../pages/dashboards/student/components/TeachingApplications";
+import Payments from "../../pages/dashboards/student/components/Payment";
+import ProfileSettings from "../../pages/dashboards/student/components/ProfileSettings";
+import Overview from "../../pages/dashboards/student/components/Overview";
+import TeacherOverview from "../../pages/dashboards/teacher/components/TeachingOverview";
+import TeacherApplications from "../../pages/dashboards/teacher/components/TeacherApplications";
+import ApprovedTuition from "../../pages/dashboards/teacher/components/ApprovedTuitions";
+import RevenueHistory from "../../pages/dashboards/teacher/components/RevenueHistory";
+import TeacherDashboard from "../../pages/dashboards/teacher/TeacherDashboard"
+import AdminDashboard from "../../pages/dashboards/ADMIN/AdminDashboard";
+import AdminOverview from "../../pages/dashboards/ADMIN/components/AdminOverview";
+import ReviewApplications from "../../pages/dashboards/ADMIN/components/ApplicationReview";
+import PendingTuition from "../../pages/dashboards/ADMIN/components/PendingTuitions";
+import PendingTutors from "../../pages/dashboards/ADMIN/components/PendingTutors";
 
 export const GeneralRouter = createBrowserRouter([
   {
@@ -48,8 +67,95 @@ export const GeneralRouter = createBrowserRouter([
         path: "/register",
         Component: Registerpage,
       },
-      ...PrivateApiCalls,
+      ...PrivateApiCalls
     ],
   },
-  //
+  {
+    path:"/dashboard",
+    element:<PrivateRoute><DashboardLayout></DashboardLayout></PrivateRoute>,
+    errorElement:<ErrorPage></ErrorPage>,
+    children:[
+      {
+          path:"student",
+          element:<StudentDashboard></StudentDashboard>,
+          children:[
+            {
+              path:"my-tuitions",
+              Component:MyTuitions
+            },
+            {
+              path:"post-tuition",
+              Component:PostTuition
+            },
+            {
+              path:"applications",
+              Component:TeachingApplications
+            },
+            {
+              path:"payments",
+              Component:Payments
+            },{
+              path:"settings",
+              Component:ProfileSettings
+            },{
+              path:"overview",
+              Component:Overview
+            }
+          ]
+
+      },
+      {
+        path:"teacher",
+          element:<TeacherDashboard></TeacherDashboard>,
+          children:[
+            {
+              path:"overview",
+              Component:TeacherOverview
+            },
+            {
+              path:"my-applications",
+              Component:TeacherApplications
+            },
+            {
+              path:"approved-tuition",
+              Component:ApprovedTuition
+            },
+            {
+              path:"Revenue-history",
+              Component:RevenueHistory
+            },
+            {
+              path:"settings",
+              Component:ProfileSettings
+            }
+          ]
+      },
+      {
+        path:"admin",
+          element:<AdminDashboard></AdminDashboard>,
+          children:[
+            {
+              path:"overview",
+              Component:AdminOverview
+            },
+            {
+              path:"review-applications",
+              Component:ReviewApplications
+            },
+            {
+              path:"allusers",
+              Component:PendingTuition
+            },
+            {
+              path:"pending-tutors",
+              Component:PendingTutors
+            },
+            {
+              path:"settings",
+              Component:ProfileSettings
+            }
+          ]
+      }
+    ]
+  }
 ]);

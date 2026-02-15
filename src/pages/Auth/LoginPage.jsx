@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, Navigate, useLocation, useNavigate } from "react-router";
 import UseAuth from "../../hooks/UseAuth";
 
 import { useAxiosOpen } from "../../hooks/useAxiosOpen";
@@ -13,8 +13,10 @@ export default function Loginpage() {
   } = useForm();
   const Axios = useAxiosOpen();
   const [showPwd, setShowPwd] = useState(false);
+  const location =useLocation()
+  const { signIn, GoogleSign } = UseAuth();
+  const navigation=useNavigate()
 
-  const { signIn, GoogleSign, LoggOut } = UseAuth();
 
   const googleSignIn = async () => {
     const result = await GoogleSign();
@@ -34,6 +36,7 @@ export default function Loginpage() {
         },
       }).then((data) => {
         console.log(data.data);
+       navigation(location?.state || "/");
       });
     } catch (error) {
       console.log(`failed to connect ${error}`);
@@ -41,7 +44,7 @@ export default function Loginpage() {
   };
 
   const onSubmit = (data) => {
-    signIn(data.email, data.password);
+    signIn(data.email, data.password).then(()=>navigation(location?.state || "/"))
   };
 
   return (

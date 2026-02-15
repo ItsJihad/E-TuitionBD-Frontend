@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import UseAuth from "../../hooks/UseAuth";
 import { useAxiosOpen } from "../../hooks/useAxiosOpen";
 
@@ -14,6 +14,7 @@ export default function Registerpage() {
   const [showPwd, setShowPwd] = useState(false);
   const { SignUp, GoogleSign, ProfileUpdate } = UseAuth();
   const AxiosOpen = useAxiosOpen();
+const navigation=useNavigate()
 
   const onSubmit = async (data) => {
     const userCredential = await SignUp(data.email, data.password);
@@ -39,6 +40,7 @@ export default function Registerpage() {
         },
       }).then((data) => {
         console.log(data.data);
+        navigation(location?.state || "/");
       });
     } catch (error) {
       console.log(`failed to connect ${error}`);
@@ -62,6 +64,7 @@ export default function Registerpage() {
         },
       }).then((data) => {
         console.log(data.data);
+        navigation(location?.state || "/");
       });
     } catch (error) {
       console.log(`failed to connect ${error}`);
