@@ -1,85 +1,155 @@
-import { CheckCircle2, XCircle, User, Briefcase, Clock } from "lucide-react";
+import {
+  BookOpen,
+  MapPin,
+  BadgeDollarSign,
+  FileText,
+  CheckCircle2,
+  XCircle,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { useAxiosSecure } from "../../../../hooks/UseAxios";
+import LoadingPage from "../../../../components/Loader/LoadingPage";
+import Swal from "sweetalert2";
 
-export default function ReviewApplications() {
+export default function ManagePrivatePosts() {
+  const axios = useAxiosSecure();
+
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchPosts = async () => {
+    try {
+      setLoading(true);
+      const res = await axios.get("/admin/allposts");
+      setPosts(res.data);
+    } catch (error) {
+      Swal.fire("Error", "Failed to fetch posts", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
+  const updateStatus = async (id, status) => {
+    const confirm = await Swal.fire({
+      title: `Are you sure?`,
+      text: `You are about to ${status} this post.`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: status === "approved" ? "#16a34a" : "#dc2626",
+      confirmButtonText: `Yes, ${status}`,
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    try {
+      await axios.patch(`/student/post/update/${id}`, {
+        status: status,
+      });
+
+      await fetchPosts();
+
+      Swal.fire({
+        icon: "success",
+        title: `Post ${status}`,
+        timer: 1500,
+        showConfirmButton: false,
+      });
+    } catch (error) {
+      Swal.fire("Error", "Action failed", "error");
+    }
+  };
+
+  if (loading) return <LoadingPage />;
+
   return (
-    <div className="relative space-y-12">
-
-      {/* Background Glow */}
-      <div className="absolute -top-20 -left-20 w-72 h-72 bg-indigo-500/10 blur-3xl rounded-full"></div>
-      <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-blue-500/10 blur-3xl rounded-full"></div>
-
-      {/* Header */}
-      <header className="relative">
+    <div className="relative space-y-10">
+      <header>
         <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
-          Review Tutor Applications
+          Manage Private Tuition Posts
         </h1>
-        <p className="text-slate-500 mt-2 text-lg">
-          Carefully approve or reject tutor applications.
+        <p className="text-slate-500 mt-2">
+          Approve or reject student tuition requests.
         </p>
-
-        <div className="mt-6 w-24 h-1 rounded-full bg-gradient-to-r from-indigo-600 to-blue-500"></div>
       </header>
 
-      {/* Applications List */}
-      <div className="grid gap-8">
+      <div className="grid md:grid-cols-2 gap-8">
+        {posts.map((post) => (
+          <div
+            key={post._id}
+            className="group relative bg-white/80 backdrop-blur-xl border border-slate-200 rounded-3xl p-6 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
+          >
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition"></div>
 
-        <div className="group relative bg-white/80 backdrop-blur-xl border border-white/40 rounded-3xl p-8 shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
-
-          {/* Hover Glow */}
-          <div className="absolute -top-10 -right-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition"></div>
-
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-
-            {/* Left Section */}
-            <div className="flex items-center gap-6">
-
-              <div className="p-5 bg-indigo-100 rounded-2xl shadow-inner">
-                <User size={24} className="text-indigo-600" />
-              </div>
-
-              <div>
-                <h3 className="text-xl font-bold text-slate-900">
-                  Asadullah Al Jihad
-                </h3>
-
-                <div className="flex flex-wrap gap-6 mt-3 text-sm text-slate-600">
-
-                  <div className="flex items-center gap-2">
-                    <Briefcase size={16} className="text-indigo-500" />
-                    Applied for: Mathematics - Class 10
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <Clock size={16} className="text-amber-500" />
-                    Status: Pending
-                  </div>
-
-                </div>
-              </div>
-
+            <div className="flex items-center gap-2 text-indigo-600 font-semibold text-lg">
+              <BookOpen size={20} />
+              {post.subject}
             </div>
 
-            {/* Right Section */}
-            <div className="flex gap-4 flex-col sm:flex-row">
+            <p className="text-sm text-slate-500 mt-1">
+              Class {post.classLevel}
+            </p>
 
-              <button className="flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-green-600 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
-                <CheckCircle2 size={18} />
+            <div className="flex items-start gap-2 mt-4 text-slate-600 text-sm">
+              <FileText size={16} className="mt-1 text-slate-400" />
+              <span>{post.description}</span>
+            </div>
+
+            <div className="flex flex-wrap gap-4 mt-4 text-sm">
+              <div className="flex items-center gap-2 text-slate-600">
+                <MapPin size={16} className="text-rose-500" />
+                {post.location}
+              </div>
+
+              <div className="flex items-center gap-2 text-slate-600">
+                <BadgeDollarSign size={16} className="text-emerald-600" />৳{" "}
+                {post.budget}
+              </div>
+
+              <span
+                className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                  post.status === "approved"
+                    ? "bg-emerald-100 text-emerald-600"
+                    : post.status === "rejected"
+                      ? "bg-rose-100 text-rose-600"
+                      : "bg-amber-100 text-amber-600"
+                }`}
+              >
+                {post.status || "pending"}
+              </span>
+            </div>
+
+            <div className="flex gap-4 mt-6">
+              <button
+                onClick={() => updateStatus(post._id, "approved")}
+                disabled={post.status === "approved"}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white transition disabled:opacity-50"
+              >
+                <CheckCircle2 size={16} />
                 Approve
               </button>
 
-              <button className="flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-rose-500 to-red-600 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
-                <XCircle size={18} />
+              <button
+                onClick={() => updateStatus(post._id, "rejected")}
+                disabled={post.status === "rejected"}
+                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition disabled:opacity-50"
+              >
+                <XCircle size={16} />
                 Reject
               </button>
-
             </div>
-
           </div>
+        ))}
 
-        </div>
-
+        {posts.length === 0 && (
+          <p className="text-center text-slate-500 col-span-2">
+            No private posts found.
+          </p>
+        )}
       </div>
-
     </div>
   );
 }

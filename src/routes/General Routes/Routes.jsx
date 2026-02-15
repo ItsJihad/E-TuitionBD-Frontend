@@ -27,6 +27,7 @@ import AdminOverview from "../../pages/dashboards/ADMIN/components/AdminOverview
 import ReviewApplications from "../../pages/dashboards/ADMIN/components/ApplicationReview";
 import PendingTuition from "../../pages/dashboards/ADMIN/components/PendingTuitions";
 import PendingTutors from "../../pages/dashboards/ADMIN/components/PendingTutors";
+import DashboardHome from "../../pages/dashboards/DashboardHome";
 
 export const GeneralRouter = createBrowserRouter([
   {
@@ -71,91 +72,61 @@ export const GeneralRouter = createBrowserRouter([
     ],
   },
   {
-    path:"/dashboard",
-    element:<PrivateRoute><DashboardLayout></DashboardLayout></PrivateRoute>,
-    errorElement:<ErrorPage></ErrorPage>,
-    children:[
-      {
-          path:"student",
-          element:<StudentDashboard></StudentDashboard>,
-          children:[
-            {
-              path:"my-tuitions",
-              Component:MyTuitions
-            },
-            {
-              path:"post-tuition",
-              Component:PostTuition
-            },
-            {
-              path:"applications",
-              Component:TeachingApplications
-            },
-            {
-              path:"payments",
-              Component:Payments
-            },{
-              path:"settings",
-              Component:ProfileSettings
-            },{
-              path:"overview",
-              Component:Overview
-            }
-          ]
+  path: "/dashboard",
+  element: (
+    <PrivateRoute>
+      <DashboardLayout />
+    </PrivateRoute>
+  ),
+  errorElement: <ErrorPage />,
+  children: [
 
-      },
-      {
-        path:"teacher",
-          element:<TeacherDashboard></TeacherDashboard>,
-          children:[
-            {
-              path:"overview",
-              Component:TeacherOverview
-            },
-            {
-              path:"my-applications",
-              Component:TeacherApplications
-            },
-            {
-              path:"approved-tuition",
-              Component:ApprovedTuition
-            },
-            {
-              path:"Revenue-history",
-              Component:RevenueHistory
-            },
-            {
-              path:"settings",
-              Component:ProfileSettings
-            }
-          ]
-      },
-      {
-        path:"admin",
-          element:<AdminDashboard></AdminDashboard>,
-          children:[
-            {
-              path:"overview",
-              Component:AdminOverview
-            },
-            {
-              path:"review-applications",
-              Component:ReviewApplications
-            },
-            {
-              path:"allusers",
-              Component:PendingTuition
-            },
-            {
-              path:"pending-tutors",
-              Component:PendingTutors
-            },
-            {
-              path:"settings",
-              Component:ProfileSettings
-            }
-          ]
-      }
-    ]
-  }
+    // Role detector
+    {
+      index: true,
+      element: <DashboardHome />
+    },
+
+    /* ================= STUDENT ================= */
+    {
+      path: "student",
+      element: <StudentDashboard />,
+      children: [
+        { index: true, element: <Overview /> }, // ✅ default page
+        { path: "my-tuitions", element: <MyTuitions /> },
+        { path: "post-tuition", element: <PostTuition /> },
+        { path: "applications", element: <TeachingApplications /> },
+        { path: "payments", element: <Payments /> },
+        { path: "settings", element: <ProfileSettings /> },
+      ],
+    },
+
+    /* ================= TEACHER ================= */
+    {
+      path: "teacher",
+      element: <TeacherDashboard />,
+      children: [
+        { index: true, element: <TeacherOverview /> }, // ✅ default page
+        { path: "my-applications", element: <TeacherApplications /> },
+        { path: "approved-tuition", element: <ApprovedTuition /> },
+        { path: "revenue-history", element: <RevenueHistory /> },
+        { path: "settings", element: <ProfileSettings /> },
+      ],
+    },
+
+    /* ================= ADMIN ================= */
+    {
+      path: "admin",
+      element: <AdminDashboard />,
+      children: [
+        { index: true, element: <AdminOverview /> }, // ✅ default page
+        { path: "review-applications", element: <ReviewApplications /> },
+        { path: "allusers", element: <PendingTuition /> },
+        { path: "manage-role", element: <PendingTutors /> },
+        { path: "settings", element: <ProfileSettings /> },
+      ],
+    },
+  ],
+}
+
 ]);

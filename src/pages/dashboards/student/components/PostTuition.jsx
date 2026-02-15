@@ -7,21 +7,60 @@ import {
   FileText,
   Send,
 } from "lucide-react";
+import Swal from "sweetalert2";
+import { useAxiosSecure } from "../../../../hooks/UseAxios";
 
 export default function PostTuition() {
+  const axios = useAxiosSecure();
+
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  /* =========================
+     SUBMIT FUNCTION
+  ========================= */
+  const onSubmit = async (data) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to submit this tuition post?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#4f46e5",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, submit!",
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      await axios.post("/student/post", data);
+
+      Swal.fire({
+        icon: "success",
+        title: "Posted!",
+        text: "Your tuition has been posted successfully.",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
+      reset(); // clear form
+    } catch (error) {
+      console.error(error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: "Something went wrong while posting.",
+      });
+    }
   };
 
   return (
     <div className="relative max-w-3xl mx-auto py-10">
-
       {/* Background Glow Effects */}
       <div className="absolute -top-24 -left-24 w-72 h-72 bg-indigo-500/20 rounded-full blur-3xl"></div>
       <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl"></div>
@@ -45,11 +84,7 @@ export default function PostTuition() {
         onSubmit={handleSubmit(onSubmit)}
         className="relative bg-white/70 backdrop-blur-2xl border border-white/40 shadow-2xl rounded-3xl p-10 space-y-8"
       >
-
-        {/* Input Grid */}
         <div className="grid md:grid-cols-2 gap-6">
-
-          {/* Subject */}
           <FormInput
             label="Subject"
             icon={<BookOpen size={18} />}
@@ -58,25 +93,24 @@ export default function PostTuition() {
             error={errors.subject}
           />
 
-          {/* Class */}
           <FormInput
             label="Class"
             icon={<GraduationCap size={18} />}
             placeholder="e.g. Class 10"
-            register={register("class", { required: "Class is required" })}
-            error={errors.class}
+            register={register("classLevel", { required: "Class is required" })}
+            error={errors.classLevel}
           />
 
-          {/* Location */}
           <FormInput
             label="Location"
             icon={<MapPin size={18} />}
             placeholder="e.g. Gulshan, Dhaka"
-            register={register("location", { required: "Location is required" })}
+            register={register("location", {
+              required: "Location is required",
+            })}
             error={errors.location}
           />
 
-          {/* Budget */}
           <FormInput
             label="Monthly Budget"
             type="number"
@@ -122,7 +156,10 @@ export default function PostTuition() {
           disabled={isSubmitting}
           className="group w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-gradient-to-r from-indigo-600 to-blue-500 text-white font-semibold text-lg shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 disabled:opacity-60"
         >
-          <Send size={20} className="group-hover:translate-x-1 transition-transform"/>
+          <Send
+            size={20}
+            className="group-hover:translate-x-1 transition-transform"
+          />
           {isSubmitting ? "Posting..." : "Submit Tuition"}
         </button>
       </form>
@@ -130,9 +167,15 @@ export default function PostTuition() {
   );
 }
 
-
-/* 🔹 Reusable Input Component */
-function FormInput({ label, icon, placeholder, register, error, type = "text" }) {
+/* Reusable Input Component */
+function FormInput({
+  label,
+  icon,
+  placeholder,
+  register,
+  error,
+  type = "text",
+}) {
   return (
     <div>
       <label className="text-sm font-semibold text-slate-700">

@@ -29,7 +29,7 @@ export const DashboardLayout = () => {
     {
       name: "Overview",
       icon: <LayoutDashboard size={20} />,
-      path: "/dashboard/student/overview",
+      path: "/dashboard/student/",
     },
     {
       name: "My Tuitions",
@@ -61,7 +61,7 @@ export const DashboardLayout = () => {
     {
       name: "Overview",
       icon: <LayoutDashboard size={20} />,
-      path: "/dashboard/teacher/overview",
+      path: "/dashboard/teacher/",
     },
     {
       name: "My Applications",
@@ -88,7 +88,7 @@ export const DashboardLayout = () => {
     {
       name: "Overview",
       icon: <LayoutDashboard size={20} />,
-      path: "/dashboard/admin/overview",
+      path: "/dashboard/admin/",
     },
     {
       name: "Review Posts",
@@ -97,9 +97,9 @@ export const DashboardLayout = () => {
     },
 
     {
-      name: "Pending Tutors",
+      name: "Manage Role",
       icon: <PlusCircle size={20} />,
-      path: "/dashboard/admin/pending-tutors",
+      path: "/dashboard/admin/manage-role",
     },
     {
       name: "Total Users",

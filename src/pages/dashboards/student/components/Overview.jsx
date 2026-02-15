@@ -39,7 +39,7 @@ export default function Overview() {
       {/* Header */}
       <header>
         <h1 className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
-          Dashboard Overview
+          Student Dashboard
         </h1>
         <p className="text-slate-500 mt-2 text-lg">
           Manage your tuition activity at a glance.
