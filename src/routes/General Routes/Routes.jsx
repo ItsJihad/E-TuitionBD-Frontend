@@ -39,8 +39,8 @@ export const GeneralRouter = createBrowserRouter([
         index: true,
         loader: async () => {
           const [allPosts, allTeachers] = await Promise.all([
-            fetch(`${import.meta.env.VITE_ServerLink}/latestposts/all`),
-            fetch(`${import.meta.env.VITE_ServerLink}/allteachers`),
+            fetch(`${import.meta.env.VITE_ServerLink}/api/latestposts/all`),
+            fetch(`${import.meta.env.VITE_ServerLink}/api/allteachers`),
           ]);
 
           const Posts = await allPosts.json();

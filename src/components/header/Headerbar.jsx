@@ -1,15 +1,38 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Sun, Moon } from "lucide-react";
 import UseAuth from "../../hooks/UseAuth";
+import { SiEducative } from "react-icons/si";
 
 function Headerbar() {
   const { currentUser, LoggOut } = UseAuth();
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [theme, setTheme] = useState("light");
 
-  // Scroll detection for glass effect
+  /* =========================
+     THEME INITIAL LOAD
+  ========================= */
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") || "light";
+    setTheme(savedTheme);
+    document.documentElement.setAttribute("data-theme", savedTheme);
+  }, []);
+
+  /* =========================
+     THEME TOGGLE
+  ========================= */
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+    document.documentElement.setAttribute("data-theme", newTheme);
+  };
+
+  /* =========================
+     SCROLL EFFECT
+  ========================= */
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 80);
@@ -29,20 +52,25 @@ function Headerbar() {
 
   return (
     <>
+      {/* ================= HEADER ================= */}
       <header
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
+        className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
           scrolled
-            ? "bg-white/70 backdrop-blur-xl shadow-md border-b border-slate-200"
+            ? "bg-base-100 shadow-md border-b border-base-content/10"
             : "bg-transparent border-b border-transparent"
         }`}
       >
         <div className="container mx-auto px-6 lg:px-10 h-20 flex items-center justify-between">
 
           {/* Logo */}
-          <Link to="/" className="text-2xl font-bold tracking-tight">
+          <Link
+            to="/"
+            className="text-2xl font-bold tracking-tight  flex gap-2.5 items-center"
+          >
+            <SiEducative></SiEducative>
             eTuition
-            <span className="bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
-              Bd
+            <span className="bg-gradient-to-r  from-indigo-600 to-blue-500 bg-clip-text text-transparent">
+            Bd
             </span>
           </Link>
 
@@ -52,10 +80,10 @@ function Headerbar() {
               <Link
                 key={link.name}
                 to={link.path}
-                className="relative text-slate-700 font-medium hover:text-indigo-600 transition group"
+                className="relative text-base-content font-medium hover:text-primary hover:font-semibold transition group"
               >
                 {link.name}
-                <span className="absolute left-0 -bottom-1 h-[2px] w-0 bg-gradient-to-r from-indigo-600 to-blue-500 transition-all duration-300 group-hover:w-full"></span>
+                <span className="absolute left-0 -bottom-1 h-[2px] w-0 bg-primary transition-all duration-300 group-hover:w-full"></span>
               </Link>
             ))}
           </nav>
@@ -63,46 +91,49 @@ function Headerbar() {
           {/* Right Side */}
           <div className="flex items-center gap-4">
 
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-xl hover:bg-base-200 hover:cursor-pointer transition"
+              aria-label="Toggle Theme"
+            >
+              {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+            </button>
+
+            {/* Auth Section */}
             {currentUser ? (
               <div className="relative hidden lg:block group">
+                <img
+                  src={
+                    currentUser.photoURL ||
+                    "https://ui-avatars.com/api/?name=User&background=0f172a&color=fff"
+                  }
+                  alt="avatar"
+                  className="w-10 h-10 rounded-full border-2 border-primary cursor-pointer transition-transform duration-300 group-hover:scale-105"
+                />
 
-    {/* Avatar */}
-    <img
-      src={
-        currentUser.photoURL ||
-        "https://ui-avatars.com/api/?name=User&background=0f172a&color=fff"
-      }
-      alt="avatar"
-      className="w-10 h-10 rounded-full border-2 border-indigo-500 cursor-pointer transition-transform duration-300 group-hover:scale-105"
-    />
+                <div className="absolute right-0 mt-4 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2">
+                  <div className="bg-base-100 border border-base-content/10 rounded-2xl shadow-xl overflow-hidden">
+                    <Link
+                      to="/dashboard"
+                      className="block px-4 py-3 text-sm text-base-content hover:bg-base-200 transition"
+                    >
+                      Dashboard
+                    </Link>
 
-    {/* Dropdown */}
-    <div className="absolute right-0 mt-4 w-48 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform group-hover:translate-y-0 translate-y-2">
-
-      <div className="bg-white/80 backdrop-blur-xl border border-slate-200 rounded-2xl shadow-xl overflow-hidden">
-
-        <Link
-          to="/dashboard"
-          className="block px-4 hover:cursor-pointer py-3 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition"
-        >
-          Dashboard
-        </Link>
-
-        <button
-          onClick={LoggOut}
-          className="w-full hover:cursor-pointer text-left px-4 py-3 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-600 transition"
-        >
-          Logout
-        </button>
-
-      </div>
-    </div>
-
-  </div>
+                    <button
+                      onClick={LoggOut}
+                      className="w-full text-left px-4 py-3 text-sm text-base-content hover:bg-base-200 transition"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              </div>
             ) : (
               <Link
                 to="/signin"
-                className="hidden lg:inline-flex items-center justify-center h-11 px-6 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-500 text-white font-semibold shadow-md hover:shadow-xl hover:scale-105 transition-all"
+                className="hidden lg:inline-flex items-center justify-center h-11 px-6 rounded-xl bg-primary text-primary-content font-semibold shadow-md hover:shadow-xl hover:scale-105 transition-all"
               >
                 Get Started
               </Link>
@@ -110,7 +141,7 @@ function Headerbar() {
 
             {/* Burger */}
             <button
-              className="lg:hidden"
+              className="lg:hidden text-base-content"
               onClick={() => setMobileOpen(true)}
             >
               <Menu size={26} />
@@ -119,39 +150,44 @@ function Headerbar() {
         </div>
       </header>
 
-      {/* Overlay */}
+      {/* ================= OVERLAY ================= */}
       <div
         onClick={() => setMobileOpen(false)}
-        className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-500 ${
+        className={`fixed inset-0 z-40 bg-black/40 transition-opacity duration-300 ${
           mobileOpen ? "opacity-100 visible" : "opacity-0 invisible"
         }`}
       ></div>
 
-      {/* Right Glass Drawer */}
+      {/* ================= MOBILE DRAWER ================= */}
       <div
-        className={`fixed top-0 right-0 h-full w-80 z-50 transform transition-transform duration-500 ${
+        className={`fixed top-0 right-0 h-full w-80 z-50 transform transition-transform duration-300 ${
           mobileOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="h-full bg-white/70 backdrop-blur-2xl border-l border-white/30 shadow-2xl relative overflow-hidden">
-
-          {/* Glow */}
-          <div className="absolute -top-20 -right-20 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"></div>
-
+        <div className="h-full bg-base-100 border-l border-base-content/10 shadow-2xl relative overflow-hidden">
           <div className="relative p-8 flex flex-col h-full">
 
-            {/* Header */}
+            {/* Drawer Header */}
             <div className="flex justify-between items-center mb-10">
-              <span className="text-lg font-bold text-slate-800">
+              <span className="text-lg font-bold text-base-content">
                 Menu
               </span>
-              <button
-                onClick={() => setMobileOpen(false)}
-                className="p-2 rounded-lg hover:bg-slate-100 transition"
-              >
-                <X size={22} />
-              </button>
+
+              <div className="flex gap-2">
+                <button
+                  onClick={toggleTheme}
+                  className="p-2 rounded-lg hover:bg-base-200 transition"
+                >
+                  {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+                </button>
+
+                <button
+                  onClick={() => setMobileOpen(false)}
+                  className="p-2 rounded-lg hover:bg-base-200 transition"
+                >
+                  <X size={22} />
+                </button>
+              </div>
             </div>
 
             {/* Links */}
@@ -161,31 +197,30 @@ function Headerbar() {
                   key={link.name}
                   to={link.path}
                   onClick={() => setMobileOpen(false)}
-                  className="relative text-slate-700 hover:text-indigo-600 transition group"
+                  className="text-base-content hover:text-primary hover:font-semibold transition"
                 >
                   {link.name}
-                  <span className="absolute left-0 -bottom-1 h-[2px] w-0 bg-gradient-to-r from-indigo-600 to-blue-500 transition-all duration-300 group-hover:w-full"></span>
                 </Link>
               ))}
             </nav>
 
             <div className="flex-1"></div>
 
-            {/* Auth */}
-            <div className="pt-8 border-t border-slate-200">
+            {/* Auth Mobile */}
+            <div className="pt-8 border-t border-base-content/10">
               {currentUser ? (
                 <>
                   <Link
                     to="/profile"
                     onClick={() => setMobileOpen(false)}
-                    className="block py-3 text-sm text-slate-700 hover:text-indigo-600"
+                    className="block py-3 text-sm text-base-content hover:text-primary"
                   >
                     Profile
                   </Link>
                   <Link
                     to="/dashboard"
                     onClick={() => setMobileOpen(false)}
-                    className="block py-3 text-sm text-slate-700 hover:text-indigo-600"
+                    className="block py-3 text-sm text-base-content hover:text-primary"
                   >
                     Dashboard
                   </Link>
@@ -194,7 +229,7 @@ function Headerbar() {
                       LoggOut();
                       setMobileOpen(false);
                     }}
-                    className="block py-3 text-sm text-left w-full text-slate-700 hover:text-indigo-600"
+                    className="block py-3 text-sm text-left w-full text-base-content hover:text-primary"
                   >
                     Logout
                   </button>
@@ -203,7 +238,7 @@ function Headerbar() {
                 <Link
                   to="/signin"
                   onClick={() => setMobileOpen(false)}
-                  className="inline-flex items-center justify-center h-12 w-full rounded-xl bg-gradient-to-r from-indigo-600 to-blue-500 text-white font-semibold shadow-lg hover:shadow-xl transition-all"
+                  className="inline-flex items-center justify-center h-12 w-full rounded-xl bg-primary text-primary-content font-semibold shadow-lg hover:shadow-xl transition-all"
                 >
                   Get Started
                 </Link>

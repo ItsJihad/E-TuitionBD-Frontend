@@ -1,113 +1,109 @@
-import { Mail, User, ArrowRight, BadgeCheck } from "lucide-react";
+import { Mail, ArrowRight, BadgeCheck } from "lucide-react";
 import { Link } from "react-router";
-
 import { useAxiosSecure } from "../../hooks/UseAxios.jsx";
 import { useEffect, useState } from "react";
 import UseAuth from "../../hooks/UseAuth";
 import LoadingPage from "../../components/Loader/LoadingPage.jsx";
 
 export default function Tutors() {
-
-    const axios = useAxiosSecure();
-  const [tutors, setTutors] = useState([]);
+  const axios = useAxiosSecure();
   const { currentUser } = UseAuth();
 
+  const [tutors, setTutors] = useState([]);
   const [loader, setLoader] = useState(true);
 
   useEffect(() => {
-    let mount = true;
-
-    const FetchData = async () => {
+    const fetchData = async () => {
       try {
-        if (mount) {
-          setLoader(true);
-          await axios.get("/private/allprivateteachers").then((res) => {
-            setTutors(res.data);
-            console.log(res.data);
-            setLoader(false);
-          });
-        }
-      } catch (error) {
         setLoader(true);
-        console.log(error);
+        const res = await axios.get("/private/allprivateteachers");
+        setTutors(res.data);
+      } catch (error) {
+        console.error("Failed to fetch tutors");
+      } finally {
         setLoader(false);
       }
     };
 
     if (currentUser) {
-      FetchData();
+      fetchData();
     }
-
-    return () => {
-      mount = false;
-      setLoader(false);
-    };
   }, [currentUser]);
 
   if (loader) {
-    return <LoadingPage></LoadingPage>;
+    return <LoadingPage />;
   }
 
   return (
-    <div className="bg-gradient-to-br from-slate-50 to-slate-100  px-6 py-20">
-      <main className="max-w-6xl mx-auto pt-12">
-        <header className="text-center max-w-2xl mx-auto mb-14">
-          <h1 className="text-4xl font-bold text-slate-900">Meet Our Tutors</h1>
-          <p className="mt-3 text-slate-600">
+    <div className="bg-base-100 text-base-content py-20">
+      <main className="container mx-auto px-6 lg:px-10">
+
+        {/* Header */}
+        <header className="text-center max-w-2xl mx-auto mb-16 space-y-4">
+          <h1 className="text-3xl md:text-5xl font-bold">
+            Meet Our <span className="text-primary">Tutors</span>
+          </h1>
+          <p className="text-base-content/70 text-lg">
             Verified tutors ready to help you achieve your academic goals.
           </p>
         </header>
 
+        {/* Cards */}
         <section>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {tutors.map((tutor) => {
               const avatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(
-                tutor.name,
+                tutor.name
               )}&background=0f172a&color=ffffff&size=200`;
 
               return (
                 <article
                   key={tutor._id}
-                  className="group bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 p-6 flex flex-col"
+                  className="flex flex-col justify-between bg-base-200 border border-base-300 rounded-xl p-6 hover:shadow-lg transition-all duration-300"
                 >
-                  <div className="flex items-center gap-4 mb-6">
-                    <img
-                      src={avatar}
-                      alt={tutor.name}
-                      className="w-16 h-16 rounded-full object-cover border-2 border-slate-100 shadow-sm"
-                    />
+                  {/* Top */}
+                  <div>
+                    <div className="flex items-center gap-4 mb-5">
+                      <img
+                        src={avatar}
+                        alt={tutor.name}
+                        className="w-14 h-14 rounded-full object-cover border border-base-300"
+                      />
 
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-semibold text-slate-900 truncate">
-                        {tutor.name}
-                      </h3>
+                      <div className="min-w-0">
+                        <h3 className="text-lg font-semibold truncate">
+                          {tutor.name}
+                        </h3>
 
-                      <div className="flex items-center gap-2 mt-1 text-xs text-emerald-600 font-medium">
-                        <BadgeCheck className="w-4 h-4" />
-                        Verified Tutor
+                        <div className="flex items-center gap-2 mt-1 text-sm text-accent">
+                          <BadgeCheck className="w-4 h-4" />
+                          Verified Tutor
+                        </div>
                       </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-sm text-base-content/70">
+                      <Mail className="w-4 h-4" />
+                      <span className="truncate">{tutor.email}</span>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 text-sm text-slate-600 mb-6">
-                    <Mail className="w-4 h-4 text-slate-400" />
-                    <span className="truncate">{tutor.email}</span>
+                  {/* Button */}
+                  <div className="mt-6 pt-4 border-t border-base-300">
+                    <Link
+                      to={`/tutors/${tutor._id}`}
+                      className="btn btn-primary btn-sm w-full"
+                    >
+                      View Profile
+                      <ArrowRight className="w-4 h-4 ml-1" />
+                    </Link>
                   </div>
-
-                  <div className="flex-grow"></div>
-
-                  <Link
-                    to={`/tutors/${tutor._id}`}
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 text-white py-2.5 text-sm font-medium hover:bg-indigo-600 transition"
-                  >
-                    View Profile
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                  </Link>
                 </article>
               );
             })}
           </div>
         </section>
+
       </main>
     </div>
   );

@@ -6,86 +6,86 @@ function FeaturedTutors() {
   const tutors = Teachers?.data || [];
 
   return (
-    <section className="mb-15">
-      <div className="container mx-auto px-4">
-        <div className="relative text-center mb-20">
-          <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-[28rem] h-[28rem] bg-indigo-500/10 rounded-full blur-3xl"></div>
+    <section className="bg-base-100 py-16 md:py-24 border-t border-base-300">
+      <div className="container mx-auto px-6 lg:px-10">
 
-          <div className="relative inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-indigo-50 to-slate-100 border border-indigo-100 text-xs font-semibold text-indigo-600 mb-6 shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+        {/* Section Header */}
+        <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-base-200 text-primary text-sm font-semibold border border-base-300">
+            <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
             Our Tutors
           </div>
 
-          <h2 className="relative text-4xl md:text-5xl font-bold tracking-tight text-slate-900 mb-6">
-            Meet Our{" "}
-            <span className="bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
-              Teachers
-            </span>
+          <h2 className="text-3xl md:text-5xl font-bold text-base-content">
+            Meet Our <span className="text-primary">Teachers</span>
           </h2>
 
-          <p className="relative text-slate-600 max-w-2xl mx-auto text-lg leading-relaxed">
+          <p className="text-base-content/70 text-lg">
             Verified tutors ready to connect and help students succeed.
           </p>
-
-          <div className="relative mt-10 flex justify-center">
-            <div className="w-24 h-1 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-full"></div>
-          </div>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-          {tutors.map((tutor) => (
+        {/* Tutor Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          {tutors.slice(0, 4).map((tutor) => (
             <div
               key={tutor._id}
-              className="group relative bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden"
+              className="flex flex-col justify-between bg-base-200 rounded-xl border border-base-300 p-6 hover:shadow-lg transition-all duration-300"
             >
-              {/* Glow Effect */}
-              <div className="absolute -top-10 -right-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition"></div>
 
-              <div className="relative flex justify-center mb-6">
-                <div className="h-24 w-24 rounded-full bg-gradient-to-r from-indigo-600 to-blue-500 flex items-center justify-center text-white text-2xl font-bold shadow-xl">
-                  {tutor.name?.charAt(0).toUpperCase()}
+              {/* Top Section */}
+              <div>
+
+                {/* Avatar */}
+                <div className="flex justify-center mb-5">
+                  <div className="h-20 w-20 rounded-full bg-primary text-primary-content flex items-center justify-center text-xl font-bold">
+                    {tutor.name?.charAt(0).toUpperCase()}
+                  </div>
                 </div>
-              </div>
 
-              <div className="text-center">
-                <h3 className="text-lg font-bold text-slate-900">
-                  {tutor.name}
-                </h3>
-                <p className="text-xs text-slate-500 mt-1">
-                  Tutor ID: {tutor._id.slice(-6)}
-                </p>
-              </div>
-
-              <div className="mt-5 space-y-3 text-sm text-slate-600">
-                <div className="flex items-center justify-center gap-2">
-                  <BadgeCheck className="w-4 h-4 text-indigo-500" />
-                  <span className="truncate max-w-[180px]">
-                    <h1>Verified with Legal Docs</h1>
-                  </span>
+                {/* Name */}
+                <div className="text-center">
+                  <h3 className="text-lg font-semibold text-base-content">
+                    {tutor.name}
+                  </h3>
+                  <p className="text-xs text-base-content/60 mt-1">
+                    Tutor ID: {tutor._id.slice(-6)}
+                  </p>
                 </div>
+
+                {/* Verified Badge */}
+                <div className="mt-5 flex items-center justify-center gap-2 text-sm text-base-content/70">
+                  <BadgeCheck className="w-4 h-4 text-accent" />
+                  <span>Verified with Legal Documents</span>
+                </div>
+
               </div>
 
-              <div className="mt-6 pt-4 border-t border-slate-200 flex items-center justify-center">
+              {/* Button */}
+              <div className="mt-6 pt-4 border-t border-base-300">
                 <Link
                   to={`/tutors/${tutor._id}`}
-                  className="inline-flex hover:cursor-pointer items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 text-white text-sm font-semibold hover:bg-indigo-600 transition-all duration-300"
+                  className="btn btn-primary btn-sm w-full"
                 >
                   View Profile
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-4 h-4 ml-1" />
                 </Link>
               </div>
+
             </div>
           ))}
         </div>
 
+        {/* View All */}
         <div className="text-center">
           <Link
-            to={"/tutors"}
-            className="inline-flex  items-center justify-center h-12 px-8 rounded-xl border-2 border-slate-200 font-semibold transition-all hover:bg-indigo-50 hover:border-indigo-300"
+            to="/tutors"
+            className="btn btn-outline btn-primary px-8"
           >
             View All Tutors →
           </Link>
         </div>
+
       </div>
     </section>
   );

@@ -1,33 +1,23 @@
-import React from "react";
 import { Link } from "react-router";
 
 function InfoSection() {
   return (
-    <div className="bg-white">
+    <div className="bg-base-100">
 
       {/* ================= HOW IT WORKS ================= */}
-      <section className="relative py-28 overflow-hidden bg-gradient-to-b from-white to-indigo-50/40">
+      <section className="py-20 md:py-24 border-t border-base-300">
+        <div className="container mx-auto px-6 lg:px-10">
 
-        {/* Glow Background */}
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[40rem] h-[40rem] bg-indigo-500/10 rounded-full blur-3xl"></div>
-
-        <div className="container mx-auto px-4 relative">
-
-          <div className="text-center mb-24">
-            <h2 className="text-4xl md:text-5xl font-bold mb-5">
-              How{" "}
-              <span className="bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
-                eTuitionBd
-              </span>{" "}
-              Works
+          <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
+            <h2 className="text-3xl md:text-5xl font-bold text-base-content">
+              How <span className="text-primary">eTuitionBd</span> Works
             </h2>
-            <p className="text-slate-600 max-w-2xl mx-auto text-lg">
+            <p className="text-base-content/70 text-lg">
               Start your journey in just three simple steps.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-12">
-
+          <div className="grid md:grid-cols-3 gap-8">
             {[
               {
                 title: "Create Your Account",
@@ -44,45 +34,40 @@ function InfoSection() {
             ].map((item, index) => (
               <div
                 key={item.title}
-                className="group relative bg-white/80 backdrop-blur-xl border border-slate-200 rounded-3xl p-10 text-center shadow-sm hover:-translate-y-3 hover:shadow-2xl transition-all duration-300"
+                className="bg-base-200 border border-base-300 rounded-xl p-8 text-center hover:shadow-md transition-all duration-300"
               >
-                {/* Step Number */}
-                <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-gradient-to-r from-indigo-600 to-blue-500 text-white font-bold flex items-center justify-center shadow-lg">
+                <div className="w-12 h-12 mx-auto rounded-full bg-primary text-primary-content font-bold flex items-center justify-center mb-6">
                   {index + 1}
                 </div>
 
-                <h3 className="mt-8 text-xl font-semibold text-slate-900 mb-4">
+                <h3 className="text-lg font-semibold text-base-content mb-3">
                   {item.title}
                 </h3>
 
-                <p className="text-slate-600 leading-relaxed">
+                <p className="text-base-content/70 leading-relaxed">
                   {item.desc}
                 </p>
               </div>
             ))}
-
           </div>
+
         </div>
       </section>
 
       {/* ================= WHY CHOOSE US ================= */}
-      <section className="py-28 bg-white">
-        <div className="container mx-auto px-4">
+      <section className="py-20 md:py-24 border-t border-base-300 bg-base-100">
+        <div className="container mx-auto px-6 lg:px-10">
 
-          <div className="text-center mb-24">
-            <h2 className="text-4xl md:text-5xl font-bold mb-5">
-              Why Choose{" "}
-              <span className="bg-gradient-to-r from-indigo-600 to-blue-500 bg-clip-text text-transparent">
-                eTuitionBd
-              </span>
-              ?
+          <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
+            <h2 className="text-3xl md:text-5xl font-bold text-base-content">
+              Why Choose <span className="text-primary">eTuitionBd</span>?
             </h2>
-            <p className="text-slate-600 max-w-2xl mx-auto text-lg">
+            <p className="text-base-content/70 text-lg">
               Designed to deliver the best experience for students and tutors.
             </p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               "Verified Tutors",
               "Flexible Scheduling",
@@ -93,57 +78,49 @@ function InfoSection() {
             ].map((title) => (
               <div
                 key={title}
-                className="group relative bg-gradient-to-br from-white to-indigo-50/40 border border-slate-200 rounded-2xl p-8 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300"
+                className="bg-base-200 border border-base-300 rounded-xl p-6 hover:shadow-md transition-all duration-300"
               >
-                <div className="w-14 h-14 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg mb-6">
+                <div className="w-12 h-12 rounded-lg bg-accent text-accent-content flex items-center justify-center font-bold mb-5">
                   ✓
                 </div>
 
-                <h3 className="text-lg font-semibold text-slate-900 mb-3">
+                <h3 className="text-lg font-semibold text-base-content mb-2">
                   {title}
                 </h3>
 
-                <p className="text-slate-600 leading-relaxed">
+                <p className="text-base-content/70">
                   High-quality experience tailored to your learning needs.
                 </p>
               </div>
             ))}
           </div>
+
         </div>
       </section>
 
       {/* ================= CTA ================= */}
-      <section className="py-28">
-        <div className="container mx-auto px-4">
+      <section className="py-20 md:py-24 border-t border-base-300">
+        <div className="container mx-auto px-6 lg:px-10">
 
-          <div className="relative overflow-hidden rounded-[3rem] bg-gradient-to-r from-indigo-600 to-blue-500 p-16 text-center shadow-2xl">
+          <div className="bg-primary text-primary-content rounded-2xl p-12 text-center shadow-lg">
 
-            {/* Glow layers */}
-            <div className="absolute inset-0 opacity-20">
-              <div className="absolute top-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
-              <div className="absolute bottom-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
-            </div>
+            <h2 className="text-3xl md:text-5xl font-bold mb-6">
+              Ready to Start Your Journey?
+            </h2>
 
-            <div className="relative max-w-3xl mx-auto">
+            <p className="text-lg opacity-90 mb-10 max-w-2xl mx-auto">
+              Join thousands of learners and tutors already growing with eTuitionBd.
+            </p>
 
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-                Ready to Start Your Journey?
-              </h2>
-
-              <p className="text-lg text-white/80 mb-12">
-                Join thousands of learners and tutors already growing with eTuitionBd.
-              </p>
-
-              <Link
-                to={"/register"}
-                className="inline-flex items-center justify-center h-14 px-14 rounded-xl bg-white text-indigo-600 font-semibold text-lg hover:scale-105 hover:bg-white/90 transition-all duration-300 shadow-xl"
-              >
-                Get Started Free →
-              </Link>
-
-            </div>
+            <Link
+              to="/register"
+              className="btn bg-base-100 text-primary hover:bg-base-200 px-10"
+            >
+              Get Started Free →
+            </Link>
 
           </div>
+
         </div>
       </section>
 

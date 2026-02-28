@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useLocation } from "react-router";
 import UseAuth from "../../hooks/UseAuth";
 import { useAxiosOpen } from "../../hooks/useAxiosOpen";
 
@@ -11,264 +11,258 @@ export default function Registerpage() {
     formState: { errors, isSubmitting },
   } = useForm();
 
-  const [showPwd, setShowPwd] = useState(false);
   const { SignUp, GoogleSign, ProfileUpdate } = UseAuth();
   const AxiosOpen = useAxiosOpen();
-const navigation=useNavigate()
 
+  const navigation = useNavigate();
+  const location = useLocation();
+
+  const [showPwd, setShowPwd] = useState(false);
+  const [authError, setAuthError] = useState("");
+
+  /* ================= REGISTER ================= */
   const onSubmit = async (data) => {
-    const userCredential = await SignUp(data.email, data.password);
-    console.log(userCredential);
-
-    const firebaseUser = userCredential.user;
-
-    await ProfileUpdate({
-      displayName: data.name,
-    });
-
-    const freshToken = await firebaseUser.getIdToken(true);
-
-    const UserInfo = {
-      role: data.role,
-      phone: data.phone,
-    };
-
     try {
-      await AxiosOpen.post("/user/auth", UserInfo, {
-        headers: {
-          authorization: `Bearer ${freshToken}`,
-        },
-      }).then((data) => {
-        console.log(data.data);
-        navigation(location?.state || "/");
+      setAuthError("");
+
+      const userCredential = await SignUp(data.email, data.password);
+      const firebaseUser = userCredential.user;
+
+      await ProfileUpdate({
+        displayName: data.name,
       });
+
+      const freshToken = await firebaseUser.getIdToken(true);
+
+      await AxiosOpen.post(
+        "/user/auth",
+        {
+          role: data.role,
+          phone: data.phone,
+        },
+        {
+          headers: {
+            authorization: `Bearer ${freshToken}`,
+          },
+        }
+      );
+
+      navigation(location?.state || "/");
     } catch (error) {
-      console.log(`failed to connect ${error}`);
+      setAuthError(error.message);
     }
   };
 
+  /* ================= GOOGLE ================= */
   const googleSignIn = async () => {
-    const result = await GoogleSign();
-    const user = result.user;
-    const token = await user.getIdToken();
-
-    const UserInfo = {
-      role: "student",
-      phone: "0100000000",
-    };
-
     try {
-      await AxiosOpen.post("/user/googleauth", UserInfo, {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      }).then((data) => {
-        console.log(data.data);
-        navigation(location?.state || "/");
-      });
+      setAuthError("");
+
+      const result = await GoogleSign();
+      const user = result.user;
+      const token = await user.getIdToken();
+
+      await AxiosOpen.post(
+        "/user/googleauth",
+        { role: "student", phone: "0100000000" },
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      navigation(location?.state || "/");
     } catch (error) {
-      console.log(`failed to connect ${error}`);
+      setAuthError(error.message);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-blue-50  px-4 py-16 relative overflow-hidden">
-      {/* Background Glow */}
-      <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[40rem] h-[40rem]  bg-indigo-500/10 rounded-full blur-3xl"></div>
+    <div className="min-h-screen bg-base-100 text-base-content flex items-center mt-5 justify-center px-4 py-16">
 
-      <main className="relative w-full max-w-lg">
-        <div className="bg-white/80 mt-9 backdrop-blur-xl border border-slate-200 rounded-3xl shadow-xl p-10">
-          <header className="text-center mb-10">
-            <h1 className="text-3xl font-bold text-slate-900">
-              Create Account
-            </h1>
-            <p className="text-slate-500 mt-2">
+      <main className="w-full max-w-lg">
+
+        <div className="bg-base-200 border border-base-300 rounded-xl shadow-lg p-8">
+
+          {/* HEADER */}
+          <header className="text-center mb-8">
+            <h1 className="text-2xl font-bold">Create Account</h1>
+            <p className="text-sm text-base-content/70">
               Join eTuitionBd and start your journey
             </p>
           </header>
 
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="space-y-6"
-            noValidate
-          >
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Full Name
+          {/* ERROR MESSAGE */}
+          {authError && (
+            <div className="alert alert-error mb-6 text-sm">
+              {authError}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+
+            {/* NAME */}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Full Name</span>
               </label>
+
               <input
-                type="text"
                 {...register("name", { required: "Name is required" })}
-                className={`w-full rounded-xl border px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition ${
-                  errors.name ? "border-rose-500" : "border-slate-200"
-                }`}
+                className="input input-bordered w-full"
               />
+
               {errors.name && (
-                <p className="mt-2 text-xs text-rose-600">
+                <span className="text-error text-xs">
                   {errors.name.message}
-                </p>
+                </span>
               )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Email Address
+            {/* EMAIL */}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Email Address</span>
               </label>
+
               <input
                 type="email"
-                autoComplete="email"
                 {...register("email", {
                   required: "Email is required",
                   pattern: {
                     value: /^\S+@\S+$/i,
-                    message: "Enter a valid email",
+                    message: "Enter valid email",
                   },
                 })}
-                className={`w-full rounded-xl border px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition ${
-                  errors.email ? "border-rose-500" : "border-slate-200"
-                }`}
+                className="input input-bordered w-full"
               />
+
               {errors.email && (
-                <p className="mt-2 text-xs text-rose-600">
+                <span className="text-error text-xs">
                   {errors.email.message}
-                </p>
+                </span>
               )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Phone Number
+            {/* PHONE */}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Phone Number</span>
               </label>
+
               <input
-                type="tel"
                 placeholder="01XXXXXXXXX"
                 {...register("phone", {
-                  required: "Phone number is required",
+                  required: "Phone required",
                   pattern: {
                     value: /^01\d{9}$/,
-                    message: "Enter a valid BD phone number",
+                    message: "Invalid BD phone number",
                   },
                 })}
-                className={`w-full rounded-xl border px-4 py-3 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition ${
-                  errors.phone ? "border-rose-500" : "border-slate-200"
-                }`}
+                className="input input-bordered w-full"
               />
+
               {errors.phone && (
-                <p className="mt-2 text-xs text-rose-600">
+                <span className="text-error text-xs">
                   {errors.phone.message}
-                </p>
+                </span>
               )}
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-2">
-                Password
+            {/* PASSWORD */}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Password</span>
               </label>
+
               <div className="relative">
                 <input
                   type={showPwd ? "text" : "password"}
-                  autoComplete="new-password"
                   {...register("password", {
-                    required: "Password is required",
+                    required: "Password required",
                     minLength: {
                       value: 6,
                       message: "Minimum 6 characters",
                     },
                   })}
-                  className={`w-full rounded-xl border px-4 py-3 pr-12 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition ${
-                    errors.password ? "border-rose-500" : "border-slate-200"
-                  }`}
+                  className="input input-bordered w-full pr-16"
                 />
+
                 <button
                   type="button"
-                  onClick={() => setShowPwd((s) => !s)}
-                  className="absolute hover:cursor-pointer right-4 top-1/2 -translate-y-1/2 text-sm text-indigo-600 font-medium hover:text-indigo-800"
+                  onClick={() => setShowPwd(!showPwd)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-primary text-sm"
                 >
                   {showPwd ? "Hide" : "Show"}
                 </button>
               </div>
+
               {errors.password && (
-                <p className="mt-2 text-xs text-rose-600">
+                <span className="text-error text-xs">
                   {errors.password.message}
-                </p>
+                </span>
               )}
             </div>
 
-            <div className="flex gap-4">
-              <label className="flex-1 cursor-pointer">
-                <input
-                  type="radio"
-                  value="student"
-                  defaultChecked
-                  {...register("role", { required: true })}
-                  className="hidden peer"
-                />
-                <div className="rounded-xl border border-slate-200 px-4 py-3 text-center peer-checked:border-indigo-500 peer-checked:bg-indigo-50 transition">
-                  Student
-                </div>
+            {/* ROLE */}
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Account Type</span>
               </label>
 
-              <label className="flex-1 cursor-pointer">
-                <input
-                  type="radio"
-                  value="teacher"
-                  {...register("role", { required: true })}
-                  className="hidden peer"
-                />
-                <div className="rounded-xl border border-slate-200 px-4 py-3 text-center peer-checked:border-indigo-500 peer-checked:bg-indigo-50 transition">
+              <div className="flex gap-4">
+                <label className="label cursor-pointer gap-2">
+                  <input
+                    type="radio"
+                    value="student"
+                    defaultChecked
+                    className="radio radio-primary"
+                    {...register("role")}
+                  />
+                  Student
+                </label>
+
+                <label className="label cursor-pointer gap-2">
+                  <input
+                    type="radio"
+                    value="teacher"
+                    className="radio radio-primary"
+                    {...register("role")}
+                  />
                   Tutor
-                </div>
-              </label>
+                </label>
+              </div>
             </div>
 
+            {/* SUBMIT */}
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full h-12 rounded-xl hover:cursor-pointer bg-gradient-to-r from-indigo-600 to-blue-500 text-white font-semibold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 disabled:opacity-60"
+              className="btn btn-primary w-full"
             >
               {isSubmitting ? "Creating account..." : "Create Account"}
             </button>
           </form>
 
-          <div className="flex items-center gap-4 my-8">
-            <div className="flex-1 h-px bg-slate-200"></div>
-            <span className="text-xs text-slate-400 uppercase tracking-wide">
-              Or continue with
-            </span>
-            <div className="flex-1 h-px bg-slate-200"></div>
+          <div className="divider text-xs my-8">
+            Or continue with
           </div>
 
           <button
             onClick={googleSignIn}
-            className="w-full h-12 hover:cursor-pointer rounded-xl border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center gap-3 text-sm font-medium shadow-sm transition-all"
+            className="btn btn-outline w-full"
           >
-            <svg width="18" height="18" viewBox="0 0 512 512">
-              <path
-                fill="#34a853"
-                d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"
-              />
-              <path
-                fill="#4285f4"
-                d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"
-              />
-              <path
-                fill="#fbbc02"
-                d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"
-              />
-              <path
-                fill="#ea4335"
-                d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
-              />
-            </svg>
             Continue with Google
           </button>
 
-          <div className="mt-8 text-center text-sm text-slate-500">
+          <div className="mt-8 text-center text-sm text-base-content/70">
             Already have an account?
-            <Link to="/signin" className="ml-2 text-indigo-600 hover:underline">
+            <Link to="/signin" className="text-primary ml-2">
               Sign in
             </Link>
           </div>
+
         </div>
       </main>
     </div>

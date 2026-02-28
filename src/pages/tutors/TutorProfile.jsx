@@ -1,103 +1,166 @@
-import { Mail, User, BadgeCheck, X, Send } from "lucide-react";
+import { Mail, BadgeCheck, Send, Star } from "lucide-react";
 import { Link, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { useAxiosSecure } from "../../hooks/UseAxios";
 import LoadingPage from "../../components/Loader/LoadingPage";
-import UseAuth from "../../hooks/UseAuth";
 
 export default function TutorProfile() {
   const { id } = useParams();
   const axios = useAxiosSecure();
-  const { currentUser } = UseAuth();
 
   const [loader, setLoader] = useState(true);
   const [tutor, setTutor] = useState(null);
- 
-
 
   useEffect(() => {
-    const FetchData = async () => {
+    const fetchData = async () => {
       try {
         setLoader(true);
         const res = await axios.get(`/teacher/teacherdetails/${id}`);
         setTutor(res.data);
       } catch (error) {
-        console.error("Error fetching tutor:", error);
+        console.error("Error fetching tutor");
       } finally {
         setLoader(false);
       }
     };
 
-    if (currentUser && id) {
-      FetchData();
+    if (id) {
+      fetchData();
     }
-  }, [id, currentUser, axios]);
-
-
+  }, [id]);
 
   if (loader) return <LoadingPage />;
 
+  if (!tutor) {
+    return (
+      <div className="py-20 text-center text-base-content">
+        Tutor not found.
+      </div>
+    );
+  }
 
   const dummyImage =
-    "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop";
+    tutor.image ||
+    "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400";
 
   return (
-    <>
-      <section className=" bg-[#fafafa] py-25 px-4 relative overflow-hidden font-sans">
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-indigo-100/50 rounded-full blur-[120px] -z-10"></div>
-        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-blue-100/50 rounded-full blur-[100px] -z-10"></div>
+    <div className="bg-base-100 text-base-content py-20">
+      <div className="container mx-auto px-6 lg:px-10 max-w-5xl">
 
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border border-slate-100 overflow-hidden flex flex-col md:flex-row">
-            <div className="md:w-2/5 bg-slate-900 p-12 flex flex-col items-center justify-center relative">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/20 rounded-full blur-3xl"></div>
+        {/* ================= PROFILE CARD ================= */}
+        <div className="bg-base-200 border border-base-300 rounded-2xl p-8 md:p-12 mb-16">
 
-              <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-full blur opacity-25 group-hover:opacity-50 transition duration-700"></div>
-                <img
-                  src={tutor?.image || dummyImage}
-                  alt="Tutor profile"
-                  className="relative w-40 h-40 rounded-full object-cover border-4 border-slate-800 shadow-2xl"
-                />
-              </div>
+          <div className="grid md:grid-cols-3 gap-10 items-center">
 
-              <div className="mt-6">
-                <span className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] uppercase tracking-wider font-bold border border-emerald-500/20">
-                  <BadgeCheck className="w-3.5 h-3.5" />
-                  Verified Tutor
-                </span>
-              </div>
+            {/* Image */}
+            <div className="flex justify-center">
+              <img
+                src={dummyImage}
+                alt={tutor.name}
+                className="w-40 h-40 rounded-full object-cover border border-base-300"
+              />
             </div>
 
-            <div className="md:w-3/5 p-12 flex flex-col justify-center bg-white">
-              <div className="space-y-2">
-                <p className="text-indigo-600 font-semibold text-sm tracking-wide uppercase">
-                  Teacher Profile
-                </p>
-                <h1 className="text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
+            {/* Main Info */}
+            <div className="md:col-span-2 space-y-4">
+              <div>
+                <h1 className="text-3xl md:text-4xl font-bold">
                   {tutor.name}
                 </h1>
-                <div className="flex items-center gap-2 text-slate-500 pt-2">
-                  <div className="p-2 bg-slate-50 rounded-lg">
-                    <Mail className="w-4 h-4 text-slate-400" />
-                  </div>
-                  <span className="text-lg">{tutor.email}</span>
+
+                <div className="flex items-center gap-2 mt-2 text-accent text-sm">
+                  <BadgeCheck className="w-4 h-4" />
+                  Verified Tutor
                 </div>
               </div>
 
-              <div className="mt-12 pt-8 border-t border-slate-50 flex flex-wrap gap-4">
-                <Link
-                  to={`mailto:${tutor.email}?subject=Inquiry for Tutoring`}
-                  className="flex items-center gap-3 px-8 py-4 bg-indigo-600 text-white rounded-2xl font-bold transition-all hover:bg-indigo-700 hover:-translate-y-1 active:scale-95 shadow-xl shadow-indigo-100"
-                >
-                  <Send className="w-5 h-5" />
-                  <span>Contact with Email</span>
-                </Link>
+              <div className="text-base-content/70">
+                <p className="flex items-center gap-2">
+                  <Mail className="w-4 h-4" />
+                  {tutor.email}
+                </p>
               </div>
+
+              <Link
+                to={`mailto:${tutor.email}?subject=Tutoring Inquiry`}
+                className="btn btn-primary btn-sm mt-4"
+              >
+                <Send className="w-4 h-4 mr-1" />
+                Contact via Email
+              </Link>
+            </div>
+
+          </div>
+        </div>
+
+        {/* ================= ABOUT SECTION ================= */}
+        <div className="mb-16">
+          <h2 className="text-2xl font-semibold mb-4">About</h2>
+          <p className="text-base-content/70 leading-relaxed">
+            {tutor.bio ||
+              "Experienced tutor with a strong academic background and a passion for helping students succeed. Skilled in personalized lesson planning and exam preparation."}
+          </p>
+        </div>
+
+        {/* ================= KEY SPECIFICATIONS ================= */}
+        <div className="mb-16">
+          <h2 className="text-2xl font-semibold mb-6">
+            Key Information
+          </h2>
+
+          <div className="grid sm:grid-cols-2 gap-6">
+            <div className="bg-base-200 border border-base-300 rounded-xl p-6">
+              <p className="text-sm text-base-content/60">Experience</p>
+              <p className="font-semibold mt-1">
+                {tutor.experience || "5+ Years"}
+              </p>
+            </div>
+
+            <div className="bg-base-200 border border-base-300 rounded-xl p-6">
+              <p className="text-sm text-base-content/60">Specialization</p>
+              <p className="font-semibold mt-1">
+                {tutor.subject || "Mathematics, Physics"}
+              </p>
+            </div>
+
+            <div className="bg-base-200 border border-base-300 rounded-xl p-6">
+              <p className="text-sm text-base-content/60">Location</p>
+              <p className="font-semibold mt-1">
+                {tutor.location || "Dhaka, Bangladesh"}
+              </p>
+            </div>
+
+            <div className="bg-base-200 border border-base-300 rounded-xl p-6">
+              <p className="text-sm text-base-content/60">Hourly Rate</p>
+              <p className="font-semibold mt-1">
+                {tutor.rate || "৳800 / hour"}
+              </p>
             </div>
           </div>
         </div>
-      </section>
-    </>
+
+        {/* ================= RATINGS ================= */}
+        <div className="mb-16">
+          <h2 className="text-2xl font-semibold mb-6">
+            Ratings & Reviews
+          </h2>
+
+          <div className="bg-base-200 border border-base-300 rounded-xl p-6 flex items-center gap-4">
+            <div className="flex text-warning">
+              <Star className="w-5 h-5 fill-current" />
+              <Star className="w-5 h-5 fill-current" />
+              <Star className="w-5 h-5 fill-current" />
+              <Star className="w-5 h-5 fill-current" />
+              <Star className="w-5 h-5 fill-current" />
+            </div>
+
+            <p className="text-base-content/70">
+              4.9 Average Rating (120 Reviews)
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
   );
 }
