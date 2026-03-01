@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const AxiosInstance = axios.create({
-  baseURL: "/api",
+  baseURL: `${import.meta.env.VITE_ServerLink}/api`,
 });
 
 export const useAxiosOpen = () => {
